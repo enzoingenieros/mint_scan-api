@@ -137,23 +137,29 @@ def procesar_imagenes_pool(
             return json_respuesta
             
     except urllib.error.HTTPError as e:
-        # Manejar errores HTTP
-        cuerpo_error = e.read().decode('utf-8')
-        try:
-            json_error = json.loads(cuerpo_error)
-            mensaje_error = json_error.get('detail', f'HTTP {e.code}')
-            codigo_error = json_error.get('code', 'UNKNOWN_ERROR')
-            
-            if e.code == 422:
-                if codigo_error == 'INVALID_FORMAT':
-                    raise Exception(f"Formato inválido: {mensaje_error}")
-                    
-        except json.JSONDecodeError:
-            mensaje_error = f"HTTP {e.code}: {e.reason}"
-        
-        raise Exception(f"Fallo al procesar imágenes: {mensaje_error}")
+        # Manejar errores HTTP sin exponer detalles
+        if e.code == 401:
+            raise Exception("Token inválido o expirado")
+        elif e.code == 403:
+            raise Exception("Acceso denegado")
+        elif e.code == 404:
+            raise Exception("Servicio no disponible")
+        elif e.code == 422:
+            raise Exception("Datos de entrada inválidos")
+        elif e.code >= 500:
+            raise Exception("Error del servidor")
+        else:
+            raise Exception(f"Error al procesar imágenes (código: {e.code})")
+    except urllib.error.URLError:
+        raise Exception("No se pudo conectar al servidor")
     except Exception as e:
-        raise Exception(f"Error en la petición: {str(e)}")
+        # Evitar mostrar detalles técnicos
+        if "timed out" in str(e).lower():
+            raise Exception("Tiempo de espera agotado")
+        elif "connection" in str(e).lower():
+            raise Exception("Error de conexión")
+        else:
+            raise Exception("Error al procesar las imágenes")
 
 
 def codificar_archivo_imagen(ruta_archivo: str) -> str:

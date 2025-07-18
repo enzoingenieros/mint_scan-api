@@ -2,6 +2,34 @@
 
 Scripts de línea de comandos en Python para interactuar con la API de MintITV.
 
+## ⚠️ IMPORTANTE: Seguridad
+
+**NUNCA** incluyas credenciales directamente en el código o comandos. Las credenciales en la línea de comandos quedan visibles en:
+
+- Historial del terminal (`history`)
+- Lista de procesos (`ps aux`)
+- Logs del sistema
+
+### Métodos seguros para manejar credenciales:
+
+1. **Variables de entorno** (recomendado):
+
+   ```bash
+   export MINTITV_USER="usuario"
+   export MINTITV_PASS="contraseña"
+   python3 login.py
+   ```
+
+2. **Entrada interactiva**:
+
+   ```bash
+   python3 login.py usuario  # Solicitará la contraseña de forma segura
+   ```
+
+3. **Archivos de configuración** (no incluidos en control de versiones):
+   - Crea un archivo `.env` con las credenciales
+   - Asegúrate de que `.env` esté en `.gitignore`
+
 ## Requisitos
 
 - Python 3.6+
@@ -26,16 +54,20 @@ chmod +x *.py  # Hacer ejecutables los scripts
 
 ## Uso desde Terminal
 
-### Flujo de trabajo típico
+### Flujo de trabajo seguro
 
 ```bash
-# 1. Obtener token de autenticación
-token=$(python3 login.py mi_usuario mi_contraseña -q)
+# 1. Configurar credenciales de forma segura
+export MINTITV_USER="tu_usuario"
+export MINTITV_PASS="tu_contraseña"
 
-# 2. Procesar un documento
+# 2. Obtener token de autenticación
+token=$(python3 login.py -q)
+
+# 3. Procesar un documento
 python3 process_image_pool.py --token "$token" --tipo coc --categoria M1 documento.pdf
 
-# 3. Listar documentos procesados
+# 4. Listar documentos procesados
 python3 list_processes.py --token "$token"
 
 # 4. Obtener detalles de un documento específico
@@ -65,14 +97,16 @@ python3 login.py <usuario> <contraseña> [opciones]
 #### Ejemplos:
 
 ```bash
-# Login básico
-python3 login.py usuario@ejemplo.com mi_contraseña
+# Login seguro con entrada interactiva
+python3 login.py usuario@ejemplo.com  # Solicitará contraseña
 
-# Obtener solo el token para usar en variable
-token=$(python3 login.py usuario@ejemplo.com mi_contraseña -q)
+# Login usando variables de entorno (recomendado)
+export MINTITV_USER="usuario@ejemplo.com"
+export MINTITV_PASS="tu_contraseña_segura"
+token=$(python3 login.py -q)
 
 # Ver información detallada
-python3 login.py usuario@ejemplo.com mi_contraseña -v
+python3 login.py -v
 ```
 
 ### 2. `retrieve_process.py` - Recuperar Documento Procesado
@@ -200,9 +234,9 @@ python3 process_image_pool.py --token "$token" --tipo cdc --categoria L \
 #!/bin/bash
 # Guardar como: procesar_documento.sh
 
-# Credenciales (mejor usar variables de entorno)
-USUARIO="mi_usuario"
-PASSWORD="mi_password"
+# Credenciales usando variables de entorno (RECOMENDADO)
+export MINTITV_USER="tu_usuario"
+export MINTITV_PASS="tu_contraseña"
 
 # 1. Login
 echo "Iniciando sesión..."
@@ -306,8 +340,8 @@ fi
 Puedes usar variables de entorno para credenciales sensibles:
 
 ```bash
-export MINTITV_USER="mi_usuario"
-export MINTITV_PASS="mi_contraseña"
+export MINTITV_USER="tu_usuario"
+export MINTITV_PASS="tu_contraseña"
 
 # En tu script:
 TOKEN=$(python3 login.py "$MINTITV_USER" "$MINTITV_PASS" -q)

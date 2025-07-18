@@ -200,30 +200,50 @@ def obtener_documento_procesado(token: str, id_proceso: str) -> ProcessedDocumen
             return json_respuesta
             
     except urllib.error.HTTPError as e:
-        # Manejar errores HTTP
+        # Manejar errores HTTP sin exponer detalles del sistema
         cuerpo_error = e.read().decode('utf-8')
         try:
             json_error = json.loads(cuerpo_error)
-            mensaje_error = json_error.get('detail', f'HTTP {e.code}')
-            codigo_error = json_error.get('code', 'UNKNOWN_ERROR')
+            codigo_error = json_error.get('code', '')
             
-            if e.code == 422:
-                # Errores de lógica de negocio
+            if e.code == 401:
+                raise Exception("Token inválido o expirado")
+            elif e.code == 403:
+                raise Exception("Acceso denegado")
+            elif e.code == 404:
+                raise Exception("Servicio no disponible")
+            elif e.code == 422:
+                # Errores de lógica de negocio - mantener estos mensajes genéricos
                 if codigo_error == 'DOCUMENT_NOT_FOUND':
-                    raise Exception(f"Documento no encontrado: {id_proceso}")
+                    raise Exception("Documento no encontrado")
                 elif codigo_error == 'DOCUMENT_NOT_SAME_STATION':
-                    raise Exception(f"Documento no disponible para esta estación: {id_proceso}")
+                    raise Exception("Documento no disponible para esta estación")
                 elif codigo_error == 'DOCUMENT_NOT_SAME_CUSTOMER':
-                    raise Exception(f"Documento no disponible para este cliente: {id_proceso}")
+                    raise Exception("Documento no disponible para este cliente")
                 elif codigo_error == 'DOCUMENT_NOT_PROCESSED':
-                    raise Exception(f"Documento aún no procesado: {id_proceso}")
+                    raise Exception("Documento aún no procesado")
+                else:
+                    raise Exception("Documento no disponible")
+            elif e.code >= 500:
+                raise Exception("Error del servidor")
+            else:
+                raise Exception(f"Error al recuperar documento (código: {e.code})")
                     
         except json.JSONDecodeError:
-            mensaje_error = f"HTTP {e.code}: {e.reason}"
-        
-        raise Exception(f"Fallo al recuperar documento: {mensaje_error}")
+            if e.code >= 500:
+                raise Exception("Error del servidor")
+            else:
+                raise Exception(f"Error de comunicación (código: {e.code})")
+    except urllib.error.URLError:
+        raise Exception("No se pudo conectar al servidor")
     except Exception as e:
-        raise Exception(f"Error en la petición: {str(e)}")
+        # Evitar mostrar detalles técnicos
+        if "timed out" in str(e).lower():
+            raise Exception("Tiempo de espera agotado")
+        elif "connection" in str(e).lower():
+            raise Exception("Error de conexión")
+        else:
+            raise Exception("Error al recuperar el documento")
 
 
 def imprimir_detalles_proceso(datos_proceso: ProcessedDocument) -> None:

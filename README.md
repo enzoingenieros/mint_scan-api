@@ -2,6 +2,21 @@
 
 Sistema de procesamiento de documentos de vehículos mediante OCR y reconocimiento inteligente.
 
+## ⚠️ Advertencias de Seguridad
+
+### **NUNCA hardcodees credenciales en el código**
+
+- No incluyas contraseñas, tokens o claves API directamente en los archivos
+- Usa variables de entorno o solicitud interactiva para credenciales sensibles
+- Revisa el archivo `.gitignore` antes de hacer commits
+
+### **Buenas prácticas de seguridad recomendadas:**
+
+- Almacena credenciales en variables de entorno (`MINTITV_USER`, `MINTITV_PASS`)
+- Usa la entrada interactiva de contraseñas cuando sea posible
+- No compartas tokens JWT - son temporales y personales
+- Revisa siempre los logs antes de compartirlos - pueden contener información sensible
+
 ## Descripción
 
 MintITV Scan API es una solución completa para digitalizar y procesar documentación técnica de vehículos, incluyendo:
@@ -36,16 +51,24 @@ pyscripts/
 └── README.md            # Documentación detallada de los scripts
 ```
 
-### Uso Rápido
+### Uso Rápido (Seguro)
 
 ```bash
-# 1. Autenticación
-token=$(python3 pyscripts/login.py usuario contraseña -q)
+# 1. Configurar variables de entorno (recomendado)
+export MINTITV_USER="tu_usuario"
+export MINTITV_PASS="tu_contraseña"
 
-# 2. Procesar un documento
+# 2. Autenticación segura
+# Opción A: Usando variables de entorno
+token=$(python3 pyscripts/login.py -q)
+
+# Opción B: Entrada interactiva (más seguro)
+token=$(python3 pyscripts/login.py tu_usuario -q)  # Solicitará contraseña
+
+# 3. Procesar un documento
 python3 pyscripts/process_image_pool.py --token "$token" --tipo coc --categoria M1 documento.pdf
 
-# 3. Ver documentos procesados
+# 4. Ver documentos procesados
 python3 pyscripts/list_processes.py --token "$token"
 
 # 4. Obtener detalles de un documento
@@ -104,6 +127,25 @@ python3 pyscripts/login.py --help
 - **Scripts de cliente**: Ver [pyscripts/README.md](pyscripts/README.md) para guía completa de uso
 - **API REST**: Documentación disponible en el servidor de la API
 - **Ejemplos**: Los scripts incluyen ayuda integrada con `--help`
+
+## JSON Schema de la API
+
+La API proporciona un JSON Schema completo que documenta todos los tipos de datos y estructuras utilizados. Puedes obtenerlo con:
+
+```bash
+# Obtener el JSON Schema completo
+curl -L rest.mintitv.com/doc
+
+# O guardarlo en un archivo
+curl -L rest.mintitv.com/doc > api-schema.json
+```
+
+El schema incluye:
+
+- Definiciones de todos los tipos de documentos (COC, Tarjetas ITV, etc.)
+- Estructura completa de los datos de ficha técnica
+- Códigos de error y respuestas de la API
+- Validaciones y restricciones de campos
 
 ## Soporte
 

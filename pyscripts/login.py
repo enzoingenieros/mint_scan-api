@@ -4,8 +4,13 @@ Módulo de autenticación para la API de MintITV
 Utiliza solo la biblioteca estándar de Python
 
 Uso desde terminal:
-    python3 login.py <usuario> <contraseña>
+    python3 login.py <usuario>              # Solicita contraseña interactivamente
+    python3 login.py <usuario> <contraseña>  # Menos seguro - visible en historial
+    python3 login.py                         # Usa MINTITV_USER y MINTITV_PASS
     python3 login.py --help
+
+SEGURIDAD: Se recomienda usar variables de entorno o entrada interactiva
+para evitar exponer contraseñas en el historial de comandos.
 """
 
 import json
@@ -13,6 +18,8 @@ import urllib.request
 import urllib.error
 import sys
 import argparse
+import os
+import getpass
 from typing import Dict, Tuple, TypedDict, Literal, Union
 
 
@@ -94,16 +101,34 @@ def iniciar_sesion(usuario: str, contraseña: str) -> str:
         cuerpo_error = e.read().decode('utf-8')
         try:
             error_tipado: ErrorResponse = json.loads(cuerpo_error)
-            mensaje_error = error_tipado.get('detail', 'Fallo en inicio de sesión')
             codigo_error = error_tipado.get('code', '')
-            if codigo_error:
-                mensaje_error = f"{mensaje_error} (Código: {codigo_error})"
+            
+            # Mensajes de error más genéricos para evitar filtrar información
+            if e.code == 401 or codigo_error == 'INVALID_CREDENTIALS':
+                raise Exception("Credenciales inválidas")
+            elif e.code == 403:
+                raise Exception("Acceso denegado")
+            elif e.code == 404:
+                raise Exception("Servicio no disponible")
+            elif e.code >= 500:
+                raise Exception("Error del servidor")
+            else:
+                raise Exception(f"Error de autenticación (código: {e.code})")
         except json.JSONDecodeError:
-            mensaje_error = f"HTTP {e.code}: {e.reason}"
-        
-        raise Exception(f"Fallo en inicio de sesión: {mensaje_error}")
+            if e.code >= 500:
+                raise Exception("Error del servidor")
+            else:
+                raise Exception(f"Error de comunicación (código: {e.code})")
+    except urllib.error.URLError:
+        raise Exception("No se pudo conectar al servidor")
     except Exception as e:
-        raise Exception(f"Error de inicio de sesión: {str(e)}")
+        # Evitar mostrar detalles técnicos específicos
+        if "timed out" in str(e).lower():
+            raise Exception("Tiempo de espera agotado")
+        elif "connection" in str(e).lower():
+            raise Exception("Error de conexión")
+        else:
+            raise Exception("Error durante el inicio de sesión")
 
 
 def crear_cabecera_bearer(token: str) -> Dict[str, str]:
@@ -129,27 +154,54 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
 Ejemplos:
-    python3 login.py miusuario miclave
-    python3 login.py usuario@ejemplo.com "mi_clave_segura"
+    python3 login.py miusuario
+    python3 login.py usuario@ejemplo.com
+    python3 login.py  # Usa variables de entorno MINTITV_USER y MINTITV_PASS
     python3 login.py --help
+
+Variables de entorno:
+    MINTITV_USER: Usuario para autenticación
+    MINTITV_PASS: Contraseña del usuario
 ''')
     
-    parser.add_argument('usuario', help='Nombre de usuario para autenticación')
-    parser.add_argument('contraseña', help='Contraseña del usuario')
+    parser.add_argument('usuario', nargs='?', help='Nombre de usuario (opcional si se usa MINTITV_USER)')
+    parser.add_argument('contraseña', nargs='?', help='Contraseña (opcional si se usa MINTITV_PASS o se solicita interactivamente)')
     parser.add_argument('-q', '--quiet', action='store_true', 
                        help='Solo mostrar el token, sin mensajes adicionales')
     parser.add_argument('-v', '--verbose', action='store_true',
                        help='Mostrar información detallada')
+    parser.add_argument('--no-interactive', action='store_true',
+                       help='No solicitar contraseña interactivamente')
     
     args = parser.parse_args()
     
     try:
+        # Obtener usuario
+        usuario = args.usuario
+        if not usuario:
+            usuario = os.environ.get('MINTITV_USER')
+            if not usuario:
+                print("Error: Se requiere usuario (argumento o variable MINTITV_USER)", file=sys.stderr)
+                return 1
+        
+        # Obtener contraseña
+        contraseña = args.contraseña
+        if not contraseña:
+            contraseña = os.environ.get('MINTITV_PASS')
+            if not contraseña and not args.no_interactive:
+                if not args.quiet:
+                    print(f"Usuario: {usuario}")
+                contraseña = getpass.getpass("Contraseña: ")
+            elif not contraseña:
+                print("Error: Se requiere contraseña (argumento, variable MINTITV_PASS o entrada interactiva)", file=sys.stderr)
+                return 1
+        
         # Iniciar sesión
         if args.verbose:
             print(f"Iniciando sesión...")
-            print(f"Usuario: {args.usuario}")
+            print(f"Usuario: {usuario}")
         
-        token = iniciar_sesion(args.usuario, args.contraseña)
+        token = iniciar_sesion(usuario, contraseña)
         
         if args.quiet:
             # Solo imprimir el token

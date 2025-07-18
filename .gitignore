@@ -1,0 +1,173 @@
+# Variables de entorno y configuración
+.env
+.env.*
+*.env
+!.env.example
+
+# Archivos de configuración local
+config.local.*
+*.local
+local_settings.py
+
+# Credenciales y tokens
+*credentials*
+*token*
+*secret*
+*password*
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Archivos de sesión y caché
+*.session
+*.cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos de log que podrían contener información sensible
+*.log
+logs/
+log/
+
+# Archivos de respaldo que podrían contener datos sensibles
+*.bak
+*.backup
+*.tmp
+*.temp
+*.swp
+*~
+
+# Directorios de IDE
+.vscode/
+.idea/
+*.iml
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de prueba con datos reales
+test_data/
+pruebas_reales/
+*_test_real.*
+*_real_data.*
+
+# Archivos de salida que podrían contener información sensible
+output/
+resultados/
+exports/
+*.csv
+*.xlsx
+*.json
+!package.json
+!package-lock.json
+
+# Certificados y configuración SSL
+ssl/
+certs/
+certificates/
+
+# Bases de datos locales
+*.db
+*.sqlite
+*.sqlite3
+
+# Archivos con información de debugging
+*.dump
+core.*
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# Python
+*.egg-info/
+dist/
+build/
+*.egg
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.pytest_cache/
+htmlcov/
+*.cover
+.hypothesis/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+.virtualenv
+
+# Package managers
+pnpm-lock.yaml
+.pnp.*
+.yarn/
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+
+# OS generated files
+*.orig
+Desktop.ini
+ehthumbs.db
+
+# Editor directories and files
+*.sublime-workspace
+*.sublime-project
+.project
+.classpath
+.settings/
+nbproject/
+
+# Compiled files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Archives
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Temporary directories
+temp/
+tmp/
+.tmp/
+
+# Environment specific
+.env.production
+.env.development
+.env.test
+.env.staging
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Misc
+*.pid
+*.seed
+*.pid.lock
+.grunt
+.lock-wscript
