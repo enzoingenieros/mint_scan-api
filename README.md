@@ -176,6 +176,61 @@ ProcessPoolResponse result = processService.processImage(
 
 Para documentación completa del cliente Java, consulta [java/README.md](java/README.md).
 
+## Cliente JavaScript/TypeScript
+
+El proyecto también incluye una implementación completa en TypeScript que se ejecuta con Bun, proporcionando máximo rendimiento y tipos estrictos.
+
+### Ubicación del Proyecto JavaScript
+
+```text
+javascript/
+├── src/
+│   ├── index.ts              # Punto de entrada principal
+│   ├── commands/             # Implementación de comandos
+│   ├── api/                  # Cliente HTTP y servicios
+│   ├── models/               # Tipos TypeScript y constantes
+│   ├── utils/                # Utilidades (validación, base64, etc.)
+│   └── core/                 # Funcionalidad central
+├── package.json
+├── tsconfig.json
+└── README.md                 # Documentación detallada
+```
+
+### Características del Cliente JavaScript
+
+- 🚀 **Bun runtime** para máximo rendimiento
+- 📝 **TypeScript** con tipos estrictos
+- 🔐 **Autenticación JWT** con soporte para variables de entorno
+- 🖥️ **CLI completo** compatible con scripts Python y Java
+- 📊 **Exportación JSON** de resultados
+- ⚡ **Sin dependencias pesadas** - solo lo esencial
+
+### Uso Rápido
+
+```bash
+# Instalar Bun (si no está instalado)
+curl -fsSL https://bun.sh/install | bash
+
+# Instalar dependencias
+cd javascript/
+bun install
+
+# Autenticación
+bun run src/index.ts login usuario@ejemplo.com
+
+# Procesar documento
+export MINTSCAN_TOKEN="tu-token"
+bun run src/index.ts process --tipo coc --categoria M1 documento.pdf
+
+# Listar documentos
+bun run src/index.ts list --estado COMPLETED
+
+# Recuperar resultado
+bun run src/index.ts retrieve <id-documento>
+```
+
+Para documentación completa del cliente JavaScript, consulta [javascript/README.md](javascript/README.md).
+
 ## Requisitos
 
 ### Para los scripts de cliente
