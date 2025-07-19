@@ -29,7 +29,8 @@ HAS_DOCKER := $(shell command -v docker 2> /dev/null)
 # Phony targets
 .PHONY: help build build-jar build-docker build-all clean run test install \
         docker-build docker-run docker-clean login list retrieve process \
-        check-java check-maven check-docker dev-setup
+        check-java check-maven check-docker dev-setup \
+        native-build docker-native-build
 
 # Help target
 help: ## Show this help message
@@ -126,6 +127,44 @@ test: check-maven ## Run tests
 	@echo "$(BLUE)Running tests...$(NC)"
 	$(MAVEN) test
 	@echo "$(GREEN)✓ Tests complete$(NC)"
+
+# Native image targets
+native-build: ## Build native executable with GraalVM
+	@echo "$(BLUE)Building native image with GraalVM...$(NC)"
+	@echo "$(YELLOW)Note: This requires GraalVM with native-image installed$(NC)"
+ifdef HAS_MAVEN
+	$(MAVEN) clean package -Pnative
+else
+	@echo "$(RED)Error: Maven is required for native build$(NC)"
+	@exit 1
+endif
+	@echo "$(GREEN)✓ Native image built: target/mintscan-cli$(NC)"
+
+docker-native-build: check-docker ## Build native image using Docker (GraalVM)
+	@echo "$(BLUE)Building native image with Docker (GraalVM)...$(NC)"
+	@echo "$(GREEN)=== MintScan Native Image Docker Build ===$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Step 1: Building JAR with Maven...$(NC)"
+	$(DOCKER) run --rm -v $(PWD):/workspace -w /workspace \
+		maven:3.9.5-eclipse-temurin-11 \
+		mvn clean package
+	@echo ""
+	@echo "$(YELLOW)Step 2: Building native executable with GraalVM...$(NC)"
+	$(DOCKER) run --rm -v $(PWD):/workspace -w /workspace \
+		ghcr.io/graalvm/graalvm-ce:ol9-java11-22.3.3 \
+		bash -c "gu install native-image && \
+			native-image -jar target/mint_scan-cli.jar \
+			--no-fallback \
+			--enable-url-protocols=http,https \
+			-H:Name=target/mintscan-cli \
+			-H:ReflectionConfigurationFiles=src/main/resources/META-INF/native-image/reflect-config.json \
+			-H:ResourceConfigurationFiles=src/main/resources/META-INF/native-image/resource-config.json"
+	@echo ""
+	@echo "$(GREEN)✓ Native build complete!$(NC)"
+	@echo "$(YELLOW)Native executable created at: $(BLUE)target/mintscan-cli$(NC)"
+	@echo ""
+	@echo "$(YELLOW)To run the native executable:$(NC)"
+	@echo "  ./target/mintscan-cli --help"
 
 # Run target
 run: ## Run the CLI (shows help)

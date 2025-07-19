@@ -3,6 +3,7 @@
 [![Java Version](https://img.shields.io/badge/Java-11%2B-orange)](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
 [![Maven](https://img.shields.io/badge/Maven-3.6%2B-blue)](https://maven.apache.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-brightgreen)](https://www.docker.com/)
+[![GraalVM Native](https://img.shields.io/badge/GraalVM-Native%20Image-purple)](https://www.graalvm.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 Aplicación de línea de comandos (CLI) para interactuar con la API de MintScan. Proporciona todas las funcionalidades necesarias para autenticación, listado, recuperación y procesamiento de documentos técnicos de vehículos.
@@ -14,6 +15,7 @@ Aplicación de línea de comandos (CLI) para interactuar con la API de MintScan.
 - 🔍 **Recuperación de documentos** específicos con todos los detalles técnicos
 - 🖼️ **Procesamiento de imágenes** individuales o múltiples (PDF, JPG, PNG, TIFF)
 - 🐳 **Docker ready** - No requiere Java instalado
+- 🚀 **GraalVM Native Image** - Binario nativo sin JVM (inicio instantáneo)
 - 🔧 **Makefile incluido** para automatización
 - 🌍 **Variables de entorno** para configuración
 - 🎨 **Salida con colores** y formato amigable
@@ -27,6 +29,10 @@ Aplicación de línea de comandos (CLI) para interactuar con la API de MintScan.
 ### Opción 2: Docker
 - Docker instalado
 - No requiere Java ni Maven
+
+### Opción 3: Binario nativo
+- Ningún requisito (el binario es autocontenido)
+- O GraalVM 22.3+ con native-image para compilar
 
 ## 🛠️ Instalación
 
@@ -65,6 +71,25 @@ source ~/.bashrc
 
 # Usar directamente
 mint_scan-cli help
+```
+
+### Método 4: Binario Nativo con GraalVM
+
+```bash
+# Compilar binario nativo con Docker (no requiere GraalVM local)
+make docker-native-build
+# o
+./docker-build.sh native
+
+# Con GraalVM instalado localmente
+make native-build
+
+# El binario se genera en target/mintscan-cli
+./target/mintscan-cli help
+
+# Copiar a directorio del sistema
+sudo cp target/mintscan-cli /usr/local/bin/
+mintscan-cli help
 ```
 
 ## 📖 Uso Básico
@@ -212,6 +237,10 @@ make process FILE=doc.pdf TYPE=coc CATEGORY=M1
 make docker-build
 make docker-clean
 
+# Binario nativo
+make native-build        # Con GraalVM local
+make docker-native-build # Con Docker
+
 # CI/CD
 make test
 make package
@@ -266,15 +295,22 @@ java/
 │   │   └── utils/             # Utilidades
 │   └── cli/                   # Aplicación CLI
 │       ├── MintScanCli.java   # Punto de entrada
-│       ├── LoginCommand.java  # Comando login
-│       ├── ListCommand.java   # Comando list
-│       ├── RetrieveCommand.java # Comando retrieve
-│       └── ProcessCommand.java  # Comando process
-├── pom.xml                    # Configuración Maven
+│       ├── commands/          # Comandos refactorizados
+│       └── ...               # Comandos legacy
+├── src/main/resources/
+│   └── META-INF/native-image/ # Configuración GraalVM
+│       ├── reflect-config.json
+│       ├── resource-config.json
+│       └── native-image.properties
+├── target/
+│   ├── mint_scan-cli.jar      # JAR ejecutable
+│   ├── mint_scan-cli-shaded.jar # JAR con dependencias
+│   └── mintscan-cli           # Binario nativo (después de compilar)
+├── pom.xml                    # Configuración Maven + GraalVM
 ├── Dockerfile                 # Build multi-etapa
 ├── docker-compose.yml         # Orquestación
-├── Makefile                   # Automatización
-├── docker-build.sh           # Script de compilación Docker
+├── Makefile                   # Automatización + targets nativos
+├── docker-build.sh           # Script de compilación (soporta native)
 └── docker-run.sh             # Script de ejecución Docker
 ```
 
@@ -330,6 +366,14 @@ process-documents:
     - ./docker-run.sh process --tipo coc --categoria M1 document.pdf
 ```
 
+## 🚀 Comparación de Métodos de Ejecución
+
+| Método | Tiempo de inicio | Memoria RAM | Requisitos | Tamaño |
+|--------|-----------------|-------------|------------|---------|
+| JAR con JVM | ~1-2 segundos | ~100-200MB | Java 11+ | ~2.4MB + JVM |
+| Binario nativo | ~10-50ms | ~10-50MB | Ninguno | ~31MB |
+| Docker | ~2-3 segundos | ~150-250MB | Docker | ~180MB imagen |
+
 ## 🐛 Solución de Problemas
 
 ### Token expirado
@@ -348,15 +392,27 @@ cp /ruta/al/archivo.pdf .
 ### Error de permisos
 ```bash
 # Dar permisos ejecutables
-chmod +x docker-*.sh mint_scan-cli
+chmod +x docker-*.sh mint_scan-cli target/mintscan-cli
 ```
 
 ### Java no encontrado
 ```bash
-# Usar Docker en su lugar
+# Opción 1: Usar Docker
 ./docker-run.sh <comando>
 # o
 make docker-run ARGS="<comando>"
+
+# Opción 2: Usar binario nativo
+./target/mintscan-cli <comando>
+```
+
+### Error al compilar imagen nativa
+```bash
+# Verificar que tienes suficiente memoria (mínimo 4GB libres)
+free -h
+
+# Usar Docker que gestiona la memoria automáticamente
+make docker-native-build
 ```
 
 ## 🤝 Contribuir
@@ -386,6 +442,30 @@ Este proyecto está bajo la licencia MIT. Ver el archivo [LICENSE](LICENSE) para
 ## 🏆 Créditos
 
 Desarrollado por el equipo de MintScan.
+
+## 📊 Detalles Técnicos del Binario Nativo
+
+### Ventajas del Binario Nativo
+- **Inicio instantáneo**: ~10-50ms vs 1-2 segundos con JVM
+- **Menor consumo de memoria**: ~10-50MB vs ~100-200MB
+- **Sin dependencias**: No requiere Java instalado
+- **Distribución simple**: Un único archivo ejecutable
+
+### Configuración GraalVM
+El proyecto incluye configuración optimizada para GraalVM:
+- Reflexión configurada para todos los modelos de datos
+- Soporte completo para Jackson (serialización JSON)
+- Protocolos HTTP/HTTPS habilitados
+- Manejo correcto de fechas con java.time
+
+### Compilación
+```bash
+# Tiempo estimado: 1-2 minutos
+# Memoria requerida: ~4-6GB durante compilación
+# Tamaño final: ~31MB
+
+make docker-native-build
+```
 
 ---
 

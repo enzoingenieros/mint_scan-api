@@ -113,14 +113,51 @@ case "$BUILD_TYPE" in
         echo -e "${GREEN}✓ Clean completed${NC}"
         ;;
         
+    "native")
+        echo -e "${YELLOW}Building native executable using GraalVM...${NC}"
+        echo
+        
+        # Step 1: Build JAR with Maven
+        echo -e "${YELLOW}Step 1: Building JAR with Maven...${NC}"
+        docker run --rm \
+            -v "$SCRIPT_DIR":/workspace \
+            -w /workspace \
+            maven:3.9.5-eclipse-temurin-11 \
+            mvn clean package
+        
+        # Step 2: Build native image using GraalVM
+        echo
+        echo -e "${YELLOW}Step 2: Building native executable with GraalVM...${NC}"
+        docker run --rm \
+            -v "$SCRIPT_DIR":/workspace \
+            -w /workspace \
+            ghcr.io/graalvm/graalvm-ce:ol9-java11-22.3.3 \
+            bash -c "gu install native-image && \
+                native-image -jar target/mint_scan-cli.jar \
+                --no-fallback \
+                --enable-url-protocols=http,https \
+                -H:Name=target/mintscan-cli \
+                -H:ReflectionConfigurationFiles=src/main/resources/META-INF/native-image/reflect-config.json \
+                -H:ResourceConfigurationFiles=src/main/resources/META-INF/native-image/resource-config.json"
+        
+        echo -e "${GREEN}✓ Native build completed successfully!${NC}"
+        echo
+        echo "Native executable created:"
+        ls -la target/mintscan-cli
+        echo
+        echo -e "${GREEN}You can now run the native CLI with:${NC}"
+        echo "  ./target/mintscan-cli"
+        ;;
+        
     *)
-        echo -e "${RED}Usage: $0 [jar|image|all|clean]${NC}"
+        echo -e "${RED}Usage: $0 [jar|image|all|clean|native]${NC}"
         echo
         echo "Options:"
         echo "  jar    - Build only the JAR file (default)"
         echo "  image  - Build only the Docker image"
         echo "  all    - Build both JAR and Docker image"
         echo "  clean  - Clean build artifacts and Docker image"
+        echo "  native - Build native executable with GraalVM"
         echo
         echo "Examples:"
         echo "  $0          # Build JAR (default)"
@@ -128,6 +165,7 @@ case "$BUILD_TYPE" in
         echo "  $0 image    # Build Docker image"
         echo "  $0 all      # Build everything"
         echo "  $0 clean    # Clean everything"
+        echo "  $0 native   # Build native executable"
         exit 1
         ;;
 esac
