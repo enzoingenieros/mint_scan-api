@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Módulo para procesar imágenes en pool de la API de MintITV
+Módulo para procesar imágenes en pool de la API de MintScan
 Utiliza solo la biblioteca estándar de Python
 
 Uso desde terminal:
@@ -266,7 +266,7 @@ def procesar_multiples_archivos(
 def main():
     """Función principal para ejecución desde línea de comandos"""
     parser = argparse.ArgumentParser(
-        description='Procesar imágenes en la API de MintITV',
+        description='Procesar imágenes en la API de MintScan',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
 Ejemplos:

@@ -1,6 +1,6 @@
-# MintITV CLI - Docker Build Guide
+# MintScan CLI - Docker Build Guide
 
-Esta guía explica cómo compilar y ejecutar el MintITV CLI usando Docker, sin necesidad de tener Java o Maven instalados en tu sistema.
+Esta guía explica cómo compilar y ejecutar el MintScan CLI usando Docker, sin necesidad de tener Java o Maven instalados en tu sistema.
 
 ## Requisitos
 

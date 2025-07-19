@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Docker build script for MintITV CLI
+# Docker build script for MintScan CLI
 # Builds the project using Docker without requiring Java/Maven on host
 #
 
@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
 
-echo -e "${GREEN}=== MintITV CLI Docker Build ===${NC}"
+echo -e "${GREEN}=== MintScan CLI Docker Build ===${NC}"
 echo
 
 # Check if Docker is installed
@@ -53,7 +53,7 @@ case "$BUILD_TYPE" in
         ls -la target/*.jar
         echo
         echo -e "${GREEN}You can now run the CLI with:${NC}"
-        echo "  java -jar target/mintitv-cli.jar"
+        echo "  java -jar target/mintscan-cli.jar"
         echo "  or"
         echo "  ./docker-run.sh <command>"
         ;;
@@ -62,12 +62,12 @@ case "$BUILD_TYPE" in
         echo -e "${YELLOW}Building Docker image...${NC}"
         
         # Build the Docker image
-        docker build -t mintitv-cli:latest .
+        docker build -t mintscan-cli:latest .
         
         echo -e "${GREEN}✓ Docker image built successfully!${NC}"
         echo
         echo -e "${GREEN}You can now run the CLI with:${NC}"
-        echo "  docker run --rm mintitv-cli:latest <command>"
+        echo "  docker run --rm mintscan-cli:latest <command>"
         ;;
         
     "all")
@@ -81,7 +81,7 @@ case "$BUILD_TYPE" in
             mvn clean package
         
         # Then build image
-        docker build -t mintitv-cli:latest .
+        docker build -t mintscan-cli:latest .
         
         echo -e "${GREEN}✓ Build completed successfully!${NC}"
         echo
@@ -89,9 +89,9 @@ case "$BUILD_TYPE" in
         ls -la target/*.jar
         echo
         echo -e "${GREEN}You can run the CLI with:${NC}"
-        echo "  java -jar target/mintitv-cli.jar"
+        echo "  java -jar target/mintscan-cli.jar"
         echo "  ./docker-run.sh <command>"
-        echo "  docker run --rm mintitv-cli:latest <command>"
+        echo "  docker run --rm mintscan-cli:latest <command>"
         ;;
         
     "clean")
@@ -105,8 +105,8 @@ case "$BUILD_TYPE" in
             mvn clean
         
         # Remove Docker image if exists
-        if docker image inspect mintitv-cli:latest &> /dev/null; then
-            docker rmi mintitv-cli:latest
+        if docker image inspect mintscan-cli:latest &> /dev/null; then
+            docker rmi mintscan-cli:latest
             echo "Docker image removed"
         fi
         

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Módulo de autenticación para la API de MintITV
+Módulo de autenticación para la API de MintScan
 Utiliza solo la biblioteca estándar de Python
 
 Uso desde terminal:
     python3 login.py <usuario>              # Solicita contraseña interactivamente
     python3 login.py <usuario> <contraseña>  # Menos seguro - visible en historial
-    python3 login.py                         # Usa MINTITV_USER y MINTITV_PASS
+    python3 login.py                         # Usa MINTSCAN_USER y MINTSCAN_PASS
     python3 login.py --help
 
 SEGURIDAD: Se recomienda usar variables de entorno o entrada interactiva
@@ -48,7 +48,7 @@ class ErrorResponse(TypedDict):
 
 def iniciar_sesion(usuario: str, contraseña: str) -> str:
     """
-    Iniciar sesión en la API de MintITV y obtener token de autenticación
+    Iniciar sesión en la API de MintScan y obtener token de autenticación
     
     Args:
         usuario: Nombre de usuario
@@ -150,22 +150,22 @@ def crear_cabecera_bearer(token: str) -> Dict[str, str]:
 def main():
     """Función principal para ejecución desde línea de comandos"""
     parser = argparse.ArgumentParser(
-        description='Iniciar sesión en la API de MintITV y obtener token JWT',
+        description='Iniciar sesión en la API de MintScan y obtener token JWT',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
 Ejemplos:
     python3 login.py miusuario
     python3 login.py usuario@ejemplo.com
-    python3 login.py  # Usa variables de entorno MINTITV_USER y MINTITV_PASS
+    python3 login.py  # Usa variables de entorno MINTSCAN_USER y MINTSCAN_PASS
     python3 login.py --help
 
 Variables de entorno:
-    MINTITV_USER: Usuario para autenticación
-    MINTITV_PASS: Contraseña del usuario
+    MINTSCAN_USER: Usuario para autenticación
+    MINTSCAN_PASS: Contraseña del usuario
 ''')
     
-    parser.add_argument('usuario', nargs='?', help='Nombre de usuario (opcional si se usa MINTITV_USER)')
-    parser.add_argument('contraseña', nargs='?', help='Contraseña (opcional si se usa MINTITV_PASS o se solicita interactivamente)')
+    parser.add_argument('usuario', nargs='?', help='Nombre de usuario (opcional si se usa MINTSCAN_USER)')
+    parser.add_argument('contraseña', nargs='?', help='Contraseña (opcional si se usa MINTSCAN_PASS o se solicita interactivamente)')
     parser.add_argument('-q', '--quiet', action='store_true', 
                        help='Solo mostrar el token, sin mensajes adicionales')
     parser.add_argument('-v', '--verbose', action='store_true',
@@ -179,21 +179,21 @@ Variables de entorno:
         # Obtener usuario
         usuario = args.usuario
         if not usuario:
-            usuario = os.environ.get('MINTITV_USER')
+            usuario = os.environ.get('MINTSCAN_USER')
             if not usuario:
-                print("Error: Se requiere usuario (argumento o variable MINTITV_USER)", file=sys.stderr)
+                print("Error: Se requiere usuario (argumento o variable MINTSCAN_USER)", file=sys.stderr)
                 return 1
         
         # Obtener contraseña
         contraseña = args.contraseña
         if not contraseña:
-            contraseña = os.environ.get('MINTITV_PASS')
+            contraseña = os.environ.get('MINTSCAN_PASS')
             if not contraseña and not args.no_interactive:
                 if not args.quiet:
                     print(f"Usuario: {usuario}")
                 contraseña = getpass.getpass("Contraseña: ")
             elif not contraseña:
-                print("Error: Se requiere contraseña (argumento, variable MINTITV_PASS o entrada interactiva)", file=sys.stderr)
+                print("Error: Se requiere contraseña (argumento, variable MINTSCAN_PASS o entrada interactiva)", file=sys.stderr)
                 return 1
         
         # Iniciar sesión

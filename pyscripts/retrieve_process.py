@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Módulo para recuperar documentos procesados de la API de MintITV
+Módulo para recuperar documentos procesados de la API de MintScan
 Utiliza solo la biblioteca estándar de Python
 
 Uso desde terminal:
@@ -579,7 +579,7 @@ def imprimir_detalles_proceso(datos_proceso: ProcessedDocument) -> None:
 def main():
     """Función principal para ejecución desde línea de comandos"""
     parser = argparse.ArgumentParser(
-        description='Recuperar documento procesado de la API de MintITV',
+        description='Recuperar documento procesado de la API de MintScan',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
 Ejemplos:

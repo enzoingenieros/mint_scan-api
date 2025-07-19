@@ -13,16 +13,16 @@ services:
       - build
 
   # CLI service - for running the application
-  mintitv-cli:
+  mintscan-cli:
     build:
       context: .
       dockerfile: Dockerfile
-    image: mintitv-cli:latest
+    image: mintscan-cli:latest
     environment:
       # Pass environment variables from host
-      - MINTITV_USER=${MINTITV_USER}
-      - MINTITV_PASS=${MINTITV_PASS}
-      - MINTITV_TOKEN=${MINTITV_TOKEN}
+      - MINTSCAN_USER=${MINTSCAN_USER}
+      - MINTSCAN_PASS=${MINTSCAN_PASS}
+      - MINTSCAN_TOKEN=${MINTSCAN_TOKEN}
     volumes:
       # Mount local directory for file access (process command)
       - ./data:/data:ro
@@ -30,7 +30,7 @@ services:
       - ./output:/output
     working_dir: /data
     # Override entrypoint to allow interactive mode
-    entrypoint: ["java", "-jar", "/app/mintitv-cli.jar"]
+    entrypoint: ["java", "-jar", "/app/mint_scan-cli.jar"]
     # Default command
     command: ["help"]
     # For interactive password input

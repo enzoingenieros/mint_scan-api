@@ -57,9 +57,9 @@ export function createLoginCommand(): Command {
   const command = new Command('login');
   
   command
-    .description('Iniciar sesión en la API de MintITV y obtener token JWT')
-    .argument('[usuario]', 'Nombre de usuario (opcional si se usa MINTITV_USER)')
-    .argument('[contraseña]', 'Contraseña (opcional si se usa MINTITV_PASS o entrada interactiva)')
+    .description('Iniciar sesión en la API de MintScan y obtener token JWT')
+    .argument('[usuario]', 'Nombre de usuario (opcional si se usa MINTSCAN_USER)')
+    .argument('[contraseña]', 'Contraseña (opcional si se usa MINTSCAN_PASS o entrada interactiva)')
     .option('-q, --quiet', 'Solo mostrar el token, sin mensajes adicionales')
     .option('-v, --verbose', 'Mostrar información detallada')
     .option('--no-interactive', 'No solicitar contraseña interactivamente')
@@ -70,7 +70,7 @@ export function createLoginCommand(): Command {
         if (!username) {
           username = process.env[ENV_VARS.USER];
           if (!username) {
-            console.error('Error: Se requiere usuario (argumento o variable MINTITV_USER)');
+            console.error('Error: Se requiere usuario (argumento o variable MINTSCAN_USER)');
             process.exit(1);
           }
         }
@@ -85,7 +85,7 @@ export function createLoginCommand(): Command {
             }
             password = await getPasswordInteractive();
           } else if (!password) {
-            console.error('Error: Se requiere contraseña (argumento, variable MINTITV_PASS o entrada interactiva)');
+            console.error('Error: Se requiere contraseña (argumento, variable MINTSCAN_PASS o entrada interactiva)');
             process.exit(1);
           }
         }
@@ -108,10 +108,10 @@ export function createLoginCommand(): Command {
           console.log(`Token: ${token}`);
           if (options.verbose) {
             console.log('\nPuedes usar este token en los otros comandos:');
-            console.log(`  export MINTITV_TOKEN='${token}'`);
-            console.log('  mintitv-cli list');
-            console.log('  mintitv-cli retrieve <id_proceso>');
-            console.log('  mintitv-cli process --tipo coc --categoria M1 <archivo>');
+            console.log(`  export MINTSCAN_TOKEN='${token}'`);
+            console.log('  mint_scan-cli list');
+            console.log('  mint_scan-cli retrieve <id_proceso>');
+            console.log('  mint_scan-cli process --tipo coc --categoria M1 <archivo>');
           }
         }
       } catch (error) {

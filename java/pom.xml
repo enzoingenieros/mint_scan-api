@@ -5,13 +5,13 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.mintitv</groupId>
-    <artifactId>mintitv-api-client</artifactId>
+    <groupId>com.mintscan</groupId>
+    <artifactId>mintscan-api-client</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>MintITV API Client</name>
-    <description>Java client library for MintITV API</description>
+    <name>MintScan API Client</name>
+    <description>Java client library for MintScan API</description>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -83,10 +83,10 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.mintitv.cli.MintItvCli</mainClass>
+                            <mainClass>com.mintscan.cli.MintScanCli</mainClass>
                         </manifest>
                     </archive>
-                    <finalName>mintitv-cli</finalName>
+                    <finalName>mint_scan-cli</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
                 <executions>
@@ -113,10 +113,10 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.mintitv.cli.MintItvCli</mainClass>
+                                    <mainClass>com.mintscan.cli.MintScanCli</mainClass>
                                 </transformer>
                             </transformers>
-                            <finalName>mintitv-cli-shaded</finalName>
+                            <finalName>mint_scan-cli-shaded</finalName>
                         </configuration>
                     </execution>
                 </executions>

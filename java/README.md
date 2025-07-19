@@ -1,11 +1,11 @@
-# MintITV CLI
+# MintScan CLI
 
 [![Java Version](https://img.shields.io/badge/Java-11%2B-orange)](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
 [![Maven](https://img.shields.io/badge/Maven-3.6%2B-blue)](https://maven.apache.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-brightgreen)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
-Aplicación de línea de comandos (CLI) para interactuar con la API de MintITV. Proporciona todas las funcionalidades necesarias para autenticación, listado, recuperación y procesamiento de documentos técnicos de vehículos.
+Aplicación de línea de comandos (CLI) para interactuar con la API de MintScan. Proporciona todas las funcionalidades necesarias para autenticación, listado, recuperación y procesamiento de documentos técnicos de vehículos.
 
 ## 🚀 Características
 
@@ -40,7 +40,7 @@ cd java/
 mvn clean package
 
 # Ejecutar
-java -jar target/mintitv-cli.jar help
+java -jar target/mint_scan-cli.jar help
 ```
 
 ### Método 2: Compilación con Docker (recomendado)
@@ -64,7 +64,7 @@ echo 'export PATH=$PATH:~/bin' >> ~/.bashrc
 source ~/.bashrc
 
 # Usar directamente
-mintitv-cli help
+mint_scan-cli help
 ```
 
 ## 📖 Uso Básico
@@ -75,84 +75,84 @@ mintitv-cli help
 
 ```bash
 # Ayuda general
-mintitv-cli help
+mint_scan-cli help
 
 # Ayuda específica de comando
-mintitv-cli login --help
-mintitv-cli help process
+mint_scan-cli login --help
+mint_scan-cli help process
 ```
 
 ### 1. Autenticación
 
 ```bash
 # Login interactivo (recomendado)
-mintitv-cli login miusuario
+mint_scan-cli login miusuario
 # Contraseña: [entrada oculta]
 
 # Login con contraseña (menos seguro)
-mintitv-cli login usuario@ejemplo.com micontraseña
+mint_scan-cli login usuario@ejemplo.com micontraseña
 
 # Usando variables de entorno
-export MINTITV_USER=miusuario
-export MINTITV_PASS=micontraseña
-mintitv-cli login
+export MINTSCAN_USER=miusuario
+export MINTSCAN_PASS=micontraseña
+mint_scan-cli login
 
 # Obtener solo el token (útil para scripts)
-export MINTITV_TOKEN=$(mintitv-cli login -q)
+export MINTSCAN_TOKEN=$(mint_scan-cli login -q)
 ```
 
 ### 2. Listar Documentos
 
 ```bash
 # Configurar token
-export MINTITV_TOKEN="tu-token-jwt"
+export MINTSCAN_TOKEN="tu-token-jwt"
 
 # Listar todos
-mintitv-cli list
+mint_scan-cli list
 
 # Filtrar por estado
-mintitv-cli list --estado COMPLETED
+mint_scan-cli list --estado COMPLETED
 
 # Filtrar por tipo y categoría
-mintitv-cli list --tipo coc --categoria M1
+mint_scan-cli list --tipo coc --categoria M1
 
 # Mostrar resumen estadístico
-mintitv-cli list --resumen
+mint_scan-cli list --resumen
 
 # Guardar en JSON
-mintitv-cli list --json documentos.json
+mint_scan-cli list --json documentos.json
 
 # Limitar resultados
-mintitv-cli list --limite 20
+mint_scan-cli list --limite 20
 ```
 
 ### 3. Recuperar Documento
 
 ```bash
 # Recuperar por ID
-mintitv-cli retrieve 731cb083-7d83-4ce7-a0ce-1a3b19b7e422
+mint_scan-cli retrieve 731cb083-7d83-4ce7-a0ce-1a3b19b7e422
 
 # Solo resumen
-mintitv-cli retrieve <id> --format resumen
+mint_scan-cli retrieve <id> --format resumen
 
 # Exportar a JSON
-mintitv-cli retrieve <id> --json resultado.json
+mint_scan-cli retrieve <id> --json resultado.json
 ```
 
 ### 4. Procesar Imágenes
 
 ```bash
 # Procesar un archivo
-mintitv-cli process --tipo coc --categoria M1 documento.pdf
+mint_scan-cli process --tipo coc --categoria M1 documento.pdf
 
 # Múltiples archivos
-mintitv-cli process --tipo titv-new --categoria N1 frente.jpg reverso.jpg
+mint_scan-cli process --tipo titv-new --categoria N1 frente.jpg reverso.jpg
 
 # Con nombre descriptivo
-mintitv-cli process --tipo coc --categoria M1 --nombre "BMW 2024" doc.pdf
+mint_scan-cli process --tipo coc --categoria M1 --nombre "BMW 2024" doc.pdf
 
 # Especificar ID de proceso
-mintitv-cli process --tipo coc --categoria M1 --id 731cb083-7d83-4ce7-a0ce-1a3b19b7e422 imagen.jpg
+mint_scan-cli process --tipo coc --categoria M1 --id 731cb083-7d83-4ce7-a0ce-1a3b19b7e422 imagen.jpg
 ```
 
 ## 🐳 Uso con Docker
@@ -172,21 +172,21 @@ mintitv-cli process --tipo coc --categoria M1 --id 731cb083-7d83-4ce7-a0ce-1a3b1
 
 ```bash
 # Ejecutar comandos
-docker-compose run --rm mintitv-cli login
-docker-compose run --rm mintitv-cli list
+docker-compose run --rm mintscan-cli login
+docker-compose run --rm mintscan-cli list
 
 # Con variables de entorno
-MINTITV_TOKEN="token" docker-compose run --rm mintitv-cli list
+MINTSCAN_TOKEN="token" docker-compose run --rm mintscan-cli list
 ```
 
 ### Docker directo
 
 ```bash
 # Construir imagen
-docker build -t mintitv-cli:latest .
+docker build -t mintscan-cli:latest .
 
 # Ejecutar
-docker run --rm -it mintitv-cli:latest login usuario
+docker run --rm -it mintscan-cli:latest login usuario
 ```
 
 ## 🔧 Makefile
@@ -222,9 +222,9 @@ make release
 
 | Variable | Descripción |
 |----------|-------------|
-| `MINTITV_USER` | Usuario para autenticación automática |
-| `MINTITV_PASS` | Contraseña para autenticación automática |
-| `MINTITV_TOKEN` | Token JWT para evitar login |
+| `MINTSCAN_USER` | Usuario para autenticación automática |
+| `MINTSCAN_PASS` | Contraseña para autenticación automática |
+| `MINTSCAN_TOKEN` | Token JWT para evitar login |
 
 ## 📊 Tipos y Categorías
 
@@ -257,7 +257,7 @@ make release
 
 ```
 java/
-├── src/main/java/com/mintitv/
+├── src/main/java/com/mintscan/
 │   ├── api/                    # Librería API
 │   │   ├── auth/              # Servicios de autenticación
 │   │   ├── process/           # Servicios de procesamiento
@@ -265,7 +265,7 @@ java/
 │   │   ├── exceptions/        # Excepciones personalizadas
 │   │   └── utils/             # Utilidades
 │   └── cli/                   # Aplicación CLI
-│       ├── MintItvCli.java    # Punto de entrada
+│       ├── MintScanCli.java   # Punto de entrada
 │       ├── LoginCommand.java  # Comando login
 │       ├── ListCommand.java   # Comando list
 │       ├── RetrieveCommand.java # Comando retrieve
@@ -284,16 +284,16 @@ java/
 
 ```bash
 # 1. Autenticación y guardar token
-export MINTITV_TOKEN=$(mintitv-cli login usuario contraseña -q)
+export MINTSCAN_TOKEN=$(mint_scan-cli login usuario contraseña -q)
 
 # 2. Procesar un documento
-mintitv-cli process --tipo coc --categoria M1 mi-documento.pdf
+mint_scan-cli process --tipo coc --categoria M1 mi-documento.pdf
 
 # 3. Esperar y verificar estado
-mintitv-cli list --estado COMPLETED | grep "mi-documento"
+mint_scan-cli list --estado COMPLETED | grep "mi-documento"
 
 # 4. Recuperar resultado
-mintitv-cli retrieve 123e4567-e89b-12d3-a456-426614174000 --json resultado.json
+mint_scan-cli retrieve 123e4567-e89b-12d3-a456-426614174000 --json resultado.json
 ```
 
 ### Script Bash de Automatización
@@ -303,17 +303,17 @@ mintitv-cli retrieve 123e4567-e89b-12d3-a456-426614174000 --json resultado.json
 # proceso-batch.sh
 
 # Login
-TOKEN=$(mintitv-cli login $MINTITV_USER $MINTITV_PASS -q)
-export MINTITV_TOKEN=$TOKEN
+TOKEN=$(mint_scan-cli login $MINTSCAN_USER $MINTSCAN_PASS -q)
+export MINTSCAN_TOKEN=$TOKEN
 
 # Procesar múltiples documentos
 for file in documentos/*.pdf; do
     echo "Procesando: $file"
-    mintitv-cli process --tipo coc --categoria M1 "$file"
+    mint_scan-cli process --tipo coc --categoria M1 "$file"
 done
 
 # Listar resultados
-mintitv-cli list --estado COMPLETED --json resultados.json
+mint_scan-cli list --estado COMPLETED --json resultados.json
 ```
 
 ### Integración con CI/CD
@@ -326,7 +326,7 @@ process-documents:
     - docker:dind
   script:
     - ./docker-build.sh
-    - export MINTITV_TOKEN=$(./docker-run.sh login $USER $PASS -q)
+    - export MINTSCAN_TOKEN=$(./docker-run.sh login $USER $PASS -q)
     - ./docker-run.sh process --tipo coc --categoria M1 document.pdf
 ```
 
@@ -335,7 +335,7 @@ process-documents:
 ### Token expirado
 ```bash
 # Regenerar token
-export MINTITV_TOKEN=$(mintitv-cli login -q)
+export MINTSCAN_TOKEN=$(mint_scan-cli login -q)
 ```
 
 ### Archivo no encontrado en Docker
@@ -348,7 +348,7 @@ cp /ruta/al/archivo.pdf .
 ### Error de permisos
 ```bash
 # Dar permisos ejecutables
-chmod +x docker-*.sh mintitv-cli
+chmod +x docker-*.sh mint_scan-cli
 ```
 
 ### Java no encontrado
@@ -379,14 +379,14 @@ Este proyecto está bajo la licencia MIT. Ver el archivo [LICENSE](LICENSE) para
 
 ## 🆘 Soporte
 
-- 📧 Email: soporte@mintitv.com
-- 🐛 Issues: [GitHub Issues](https://github.com/mintitv/cli/issues)
-- 📖 Documentación API: [https://docs.mintitv.com](https://docs.mintitv.com)
+- 📧 Email: soporte@mintscan.com
+- 🐛 Issues: [GitHub Issues](https://github.com/mintscan/cli/issues)
+- 📖 Documentación API: [https://docs.mintscan.com](https://docs.mintscan.com)
 
 ## 🏆 Créditos
 
-Desarrollado por el equipo de MintITV.
+Desarrollado por el equipo de MintScan.
 
 ---
 
-**Nota**: Este CLI es compatible con la API v1 de MintITV. Asegúrese de tener credenciales válidas antes de usar.
+**Nota**: Este CLI es compatible con la API v1 de MintScan. Asegúrese de tener credenciales válidas antes de usar.

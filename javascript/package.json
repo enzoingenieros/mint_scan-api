@@ -1,21 +1,21 @@
 {
-  "name": "mintitv-cli",
+  "name": "mint_scan-cli",
   "version": "1.0.0",
-  "description": "CLI for MintITV API operations using Bun and TypeScript",
+  "description": "CLI for MintScan API operations using Bun and TypeScript",
   "main": "src/index.ts",
   "type": "module",
   "bin": {
-    "mintitv-cli": "src/index.ts"
+    "mint_scan-cli": "src/index.ts"
   },
   "scripts": {
     "start": "bun run src/index.ts",
     "dev": "bun --watch src/index.ts",
-    "build": "bun build src/index.ts --compile --outfile mintitv-cli",
+    "build": "bun build src/index.ts --compile --outfile mint_scan-cli",
     "test": "bun test",
     "typecheck": "tsc --noEmit",
     "lint": "tsc --noEmit"
   },
-  "keywords": ["mintitv", "cli", "api", "typescript", "bun"],
+  "keywords": ["mintscan", "cli", "api", "typescript", "bun"],
   "author": "",
   "license": "MIT",
   "dependencies": {

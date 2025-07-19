@@ -6,19 +6,19 @@ import { createProcessCommand } from './commands/process.ts';
 import { createRetrieveCommand } from './commands/retrieve.ts';
 
 const VERSION = '1.0.0';
-const APP_NAME = 'mintitv-cli';
+const APP_NAME = 'mint_scan-cli';
 
 const program = new Command();
 
 program
   .name(APP_NAME)
-  .description('CLI para operaciones con la API de MintITV')
+  .description('CLI para operaciones con la API de MintScan')
   .version(VERSION)
   .addHelpText('after', `
 Variables de entorno:
-  MINTITV_USER    Usuario para autenticación
-  MINTITV_PASS    Contraseña del usuario
-  MINTITV_TOKEN   Token JWT para evitar login
+  MINTSCAN_USER    Usuario para autenticación
+  MINTSCAN_PASS    Contraseña del usuario
+  MINTSCAN_TOKEN   Token JWT para evitar login
 
 Ejemplos:
   ${APP_NAME} login miusuario

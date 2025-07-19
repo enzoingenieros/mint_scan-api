@@ -1,4 +1,4 @@
-# Guía Rápida - Makefile MintITV CLI
+# Guía Rápida - Makefile MintScan CLI
 
 ## Instalación de Make
 
@@ -73,7 +73,7 @@ make login USER=miusuario
 make list TOKEN=tu-token-aqui
 
 # Usando variable de entorno
-export MINTITV_TOKEN=tu-token-aqui
+export MINTSCAN_TOKEN=tu-token-aqui
 make list
 
 # Con filtros
@@ -109,7 +109,7 @@ make dev-setup
 make build
 
 # 3. Login y guardar token
-export MINTITV_TOKEN=$(java -jar target/mintitv-cli.jar login usuario contraseña -q)
+export MINTSCAN_TOKEN=$(java -jar target/mint_scan-cli.jar login usuario contraseña -q)
 
 # 4. Usar comandos
 make list
@@ -122,7 +122,7 @@ make process FILE=mi-doc.pdf TYPE=coc CATEGORY=M1
 make docker-build
 
 # 2. Login
-export MINTITV_TOKEN=$(./docker-run.sh login usuario contraseña -q)
+export MINTSCAN_TOKEN=$(./docker-run.sh login usuario contraseña -q)
 
 # 3. Usar comandos vía Docker
 make docker-run ARGS="list"
@@ -145,13 +145,13 @@ make release
 
 ```bash
 # Configurar credenciales
-export MINTITV_USER=usuario
-export MINTITV_PASS=contraseña
-export MINTITV_TOKEN=token-jwt
+export MINTSCAN_USER=usuario
+export MINTSCAN_PASS=contraseña
+export MINTSCAN_TOKEN=token-jwt
 
 # Los comandos las usarán automáticamente
-make login      # Usará MINTITV_USER y MINTITV_PASS
-make list       # Usará MINTITV_TOKEN
+make login      # Usará MINTSCAN_USER y MINTSCAN_PASS
+make list       # Usará MINTSCAN_TOKEN
 ```
 
 ## Instalación en el Sistema
@@ -165,7 +165,7 @@ echo 'export PATH=$PATH:~/bin' >> ~/.bashrc
 source ~/.bashrc
 
 # Usar directamente
-mintitv-cli help
+mint_scan-cli help
 ```
 
 ## Atajos Útiles
@@ -202,7 +202,7 @@ which make
 ### Permisos denegados
 ```bash
 # Dar permisos a scripts
-chmod +x docker-*.sh mintitv-cli
+chmod +x docker-*.sh mint_scan-cli
 ```
 
 ### Variables no definidas
@@ -225,7 +225,7 @@ make build
 ### Cambiar imagen Docker
 ```makefile
 # Editar Makefile
-DOCKER_IMAGE := mi-registro/mintitv-cli:latest
+DOCKER_IMAGE := mi-registro/mint_scan-cli:latest
 ```
 
 ### Añadir comandos propios

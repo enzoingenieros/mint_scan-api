@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Módulo para listar documentos procesados de la API de MintITV
+Módulo para listar documentos procesados de la API de MintScan
 Utiliza solo la biblioteca estándar de Python
 
 Uso desde terminal:
@@ -258,7 +258,7 @@ def imprimir_lista_documentos(documentos: List[ProcessDocumentItem], limite: int
 def main():
     """Función principal para ejecución desde línea de comandos"""
     parser = argparse.ArgumentParser(
-        description='Listar documentos procesados de la API de MintITV',
+        description='Listar documentos procesados de la API de MintScan',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
 Ejemplos:

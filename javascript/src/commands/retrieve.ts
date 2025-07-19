@@ -61,7 +61,7 @@ export function createRetrieveCommand(): Command {
   const command = new Command('retrieve');
   
   command
-    .description('Recuperar un documento procesado específico de la API de MintITV')
+    .description('Recuperar un documento procesado específico de la API de MintScan')
     .argument('<id_proceso>', 'UUID del proceso a recuperar')
     .option('-t, --token <TOKEN>', 'Token JWT de autenticación')
     .option('-j, --json <ARCHIVO>', 'Guardar resultado completo en archivo JSON')
@@ -72,8 +72,8 @@ export function createRetrieveCommand(): Command {
         // Get token
         const token = options.token || process.env[ENV_VARS.TOKEN];
         if (!token) {
-          console.error('Error: Se requiere token (--token o variable MINTITV_TOKEN)');
-          console.error("Ejecuta 'mintitv-cli login' para obtener un token");
+          console.error('Error: Se requiere token (--token o variable MINTSCAN_TOKEN)');
+          console.error("Ejecuta 'mint_scan-cli login' para obtener un token");
           process.exit(1);
         }
 

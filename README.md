@@ -1,4 +1,4 @@
-# MintITV Scan API
+# MintScan API
 
 Sistema de procesamiento de documentos de vehículos mediante OCR y reconocimiento inteligente.
 
@@ -12,14 +12,14 @@ Sistema de procesamiento de documentos de vehículos mediante OCR y reconocimien
 
 ### **Buenas prácticas de seguridad recomendadas:**
 
-- Almacena credenciales en variables de entorno (`MINTITV_USER`, `MINTITV_PASS`)
+- Almacena credenciales en variables de entorno (`MINTSCAN_USER`, `MINTSCAN_PASS`)
 - Usa la entrada interactiva de contraseñas cuando sea posible
 - No compartas tokens JWT - son temporales y personales
 - Revisa siempre los logs antes de compartirlos - pueden contener información sensible
 
 ## Descripción
 
-MintITV Scan API es una solución completa para digitalizar y procesar documentación técnica de vehículos, incluyendo:
+MintScan API es una solución completa para digitalizar y procesar documentación técnica de vehículos, incluyendo:
 
 - Certificados de Conformidad (COC)
 - Tarjetas ITV (antiguas y nuevas)
@@ -55,8 +55,8 @@ pyscripts/
 
 ```bash
 # 1. Configurar variables de entorno (recomendado)
-export MINTITV_USER="tu_usuario"
-export MINTITV_PASS="tu_contraseña"
+export MINTSCAN_USER="tu_usuario"
+export MINTSCAN_PASS="tu_contraseña"
 
 # 2. Autenticación segura
 # Opción A: Usando variables de entorno
@@ -79,13 +79,13 @@ Para documentación completa sobre los scripts, consulta [pyscripts/README.md](p
 
 ## Cliente Java / Java Client
 
-El proyecto incluye una implementación completa en Java de la API de MintITV, proporcionando tanto una librería reutilizable como una aplicación CLI con todas las funcionalidades.
+El proyecto incluye una implementación completa en Java de la API de MintScan, proporcionando tanto una librería reutilizable como una aplicación CLI con todas las funcionalidades.
 
 ### Ubicación del Proyecto Java
 
 ```text
 java/
-├── src/main/java/com/mintitv/
+├── src/main/java/com/mintscan/
 │   ├── api/                    # Librería API Java
 │   │   ├── auth/              # Servicios de autenticación
 │   │   ├── process/           # Servicios de procesamiento
@@ -93,7 +93,7 @@ java/
 │   │   ├── exceptions/        # Manejo de errores
 │   │   └── utils/             # Utilidades HTTP y Base64
 │   └── cli/                   # Aplicación CLI
-│       └── MintItvCli.java    # Punto de entrada principal
+│       └── MintScanCli.java    # Punto de entrada principal
 ├── pom.xml                    # Configuración Maven
 ├── Dockerfile                 # Build con Docker (no requiere Java)
 ├── Makefile                   # Automatización completa
@@ -115,7 +115,7 @@ java/
 # Opción 1: Con Java instalado
 cd java/
 mvn clean package
-java -jar target/mintitv-cli.jar help
+java -jar target/mint_scan-cli.jar help
 
 # Opción 2: Con Docker (sin Java)
 cd java/
@@ -133,19 +133,19 @@ make list
 
 ```bash
 # Autenticación
-java -jar target/mintitv-cli.jar login miusuario
+java -jar target/mint_scan-cli.jar login miusuario
 # O con Docker:
 ./docker-run.sh login miusuario
 
 # Listar documentos
-export MINTITV_TOKEN="tu-token"
-java -jar target/mintitv-cli.jar list --estado COMPLETED
+export MINTSCAN_TOKEN="tu-token"
+java -jar target/mint_scan-cli.jar list --estado COMPLETED
 
 # Procesar documento
-java -jar target/mintitv-cli.jar process --tipo coc --categoria M1 documento.pdf
+java -jar target/mint_scan-cli.jar process --tipo coc --categoria M1 documento.pdf
 
 # Recuperar resultado
-java -jar target/mintitv-cli.jar retrieve <id-documento>
+java -jar target/mint_scan-cli.jar retrieve <id-documento>
 ```
 
 ### Uso como Librería Java
@@ -248,4 +248,4 @@ El schema incluye:
 
 ## Soporte
 
-Para reportar problemas o solicitar características, contacta con el equipo de desarrollo de MintITV.
+Para reportar problemas o solicitar características, contacta con el equipo de desarrollo de MintScan.

@@ -3,9 +3,9 @@ export const API_BASE_URL = 'https://rest.mintitv.com/api/v1';
 
 // Environment Variables
 export const ENV_VARS = {
-  USER: 'MINTITV_USER',
-  PASS: 'MINTITV_PASS',
-  TOKEN: 'MINTITV_TOKEN',
+  USER: 'MINTSCAN_USER',
+  PASS: 'MINTSCAN_PASS',
+  TOKEN: 'MINTSCAN_TOKEN',
 } as const;
 
 // File Extensions and Types Mapping

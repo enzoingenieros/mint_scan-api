@@ -1,6 +1,6 @@
-# Scripts Python para la API de MintITV
+# Scripts Python para la API de MintScan
 
-Scripts de línea de comandos en Python para interactuar con la API de MintITV.
+Scripts de línea de comandos en Python para interactuar con la API de MintScan.
 
 ## ⚠️ IMPORTANTE: Seguridad
 
@@ -15,8 +15,8 @@ Scripts de línea de comandos en Python para interactuar con la API de MintITV.
 1. **Variables de entorno** (recomendado):
 
    ```bash
-   export MINTITV_USER="usuario"
-   export MINTITV_PASS="contraseña"
+   export MINTSCAN_USER="usuario"
+   export MINTSCAN_PASS="contraseña"
    python3 login.py
    ```
 
@@ -58,8 +58,8 @@ chmod +x *.py  # Hacer ejecutables los scripts
 
 ```bash
 # 1. Configurar credenciales de forma segura
-export MINTITV_USER="tu_usuario"
-export MINTITV_PASS="tu_contraseña"
+export MINTSCAN_USER="tu_usuario"
+export MINTSCAN_PASS="tu_contraseña"
 
 # 2. Obtener token de autenticación
 token=$(python3 login.py -q)
@@ -101,8 +101,8 @@ python3 login.py <usuario> <contraseña> [opciones]
 python3 login.py usuario@ejemplo.com  # Solicitará contraseña
 
 # Login usando variables de entorno (recomendado)
-export MINTITV_USER="usuario@ejemplo.com"
-export MINTITV_PASS="tu_contraseña_segura"
+export MINTSCAN_USER="usuario@ejemplo.com"
+export MINTSCAN_PASS="tu_contraseña_segura"
 token=$(python3 login.py -q)
 
 # Ver información detallada
@@ -235,8 +235,8 @@ python3 process_image_pool.py --token "$token" --tipo cdc --categoria L \
 # Guardar como: procesar_documento.sh
 
 # Credenciales usando variables de entorno (RECOMENDADO)
-export MINTITV_USER="tu_usuario"
-export MINTITV_PASS="tu_contraseña"
+export MINTSCAN_USER="tu_usuario"
+export MINTSCAN_PASS="tu_contraseña"
 
 # 1. Login
 echo "Iniciando sesión..."
@@ -340,11 +340,11 @@ fi
 Puedes usar variables de entorno para credenciales sensibles:
 
 ```bash
-export MINTITV_USER="tu_usuario"
-export MINTITV_PASS="tu_contraseña"
+export MINTSCAN_USER="tu_usuario"
+export MINTSCAN_PASS="tu_contraseña"
 
 # En tu script:
-TOKEN=$(python3 login.py "$MINTITV_USER" "$MINTITV_PASS" -q)
+TOKEN=$(python3 login.py "$MINTSCAN_USER" "$MINTSCAN_PASS" -q)
 ```
 
 ## Tipos de Documento y Categorías

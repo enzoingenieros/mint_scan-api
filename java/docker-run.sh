@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Docker run wrapper for MintITV CLI
+# Docker run wrapper for MintScan CLI
 # Runs the CLI using Docker without requiring Java on host
 #
 
@@ -23,7 +23,7 @@ if ! command -v docker &> /dev/null; then
 fi
 
 # Check if image exists, build if not
-if ! docker image inspect mintitv-cli:latest &> /dev/null; then
+if ! docker image inspect mintscan-cli:latest &> /dev/null; then
     echo -e "${GREEN}Docker image not found. Building...${NC}"
     ./docker-build.sh image
 fi
@@ -37,23 +37,23 @@ if [ -t 0 ]; then
 fi
 
 # Pass environment variables safely
-if [ -n "$MINTITV_USER" ]; then
-    DOCKER_CMD="$DOCKER_CMD -e MINTITV_USER"
+if [ -n "$MINTSCAN_USER" ]; then
+    DOCKER_CMD="$DOCKER_CMD -e MINTSCAN_USER"
 fi
 
-if [ -n "$MINTITV_PASS" ]; then
-    DOCKER_CMD="$DOCKER_CMD -e MINTITV_PASS"
+if [ -n "$MINTSCAN_PASS" ]; then
+    DOCKER_CMD="$DOCKER_CMD -e MINTSCAN_PASS"
 fi
 
-if [ -n "$MINTITV_TOKEN" ]; then
-    DOCKER_CMD="$DOCKER_CMD -e MINTITV_TOKEN"
+if [ -n "$MINTSCAN_TOKEN" ]; then
+    DOCKER_CMD="$DOCKER_CMD -e MINTSCAN_TOKEN"
 fi
 
 # Mount current directory for file access
 DOCKER_CMD="$DOCKER_CMD -v $(pwd):/data -w /data"
 
 # Add image name
-DOCKER_CMD="$DOCKER_CMD mintitv-cli:latest"
+DOCKER_CMD="$DOCKER_CMD mintscan-cli:latest"
 
 # Run the CLI
 exec $DOCKER_CMD "$@"

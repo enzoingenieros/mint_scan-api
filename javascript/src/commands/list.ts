@@ -55,7 +55,7 @@ export function createListCommand(): Command {
   const command = new Command('list');
   
   command
-    .description('Listar documentos procesados de la API de MintITV')
+    .description('Listar documentos procesados de la API de MintScan')
     .option('-t, --token <TOKEN>', 'Token JWT de autenticación')
     .option('-e, --estado <ESTADO>', `Filtrar por estado (${PROCESS_STATUSES.join(', ')})`)
     .option('--tipo <TIPO>', `Filtrar por tipo de documento (${DOCUMENT_TYPES.join(', ')})`)
@@ -71,8 +71,8 @@ export function createListCommand(): Command {
         // Get token
         const token = options.token || process.env[ENV_VARS.TOKEN];
         if (!token) {
-          console.error('Error: Se requiere token (--token o variable MINTITV_TOKEN)');
-          console.error("Ejecuta 'mintitv-cli login' para obtener un token");
+          console.error('Error: Se requiere token (--token o variable MINTSCAN_TOKEN)');
+          console.error("Ejecuta 'mint_scan-cli login' para obtener un token");
           process.exit(1);
         }
 

@@ -1,4 +1,4 @@
-# Multi-stage build for MintITV CLI
+# Multi-stage build for MintScan CLI
 
 # Stage 1: Build stage
 FROM maven:3.9.5-eclipse-temurin-11 AS builder
@@ -32,13 +32,13 @@ RUN addgroup -g 1000 appgroup && \
 WORKDIR /app
 
 # Copy the JAR from builder stage
-COPY --from=builder /app/target/mintitv-cli.jar .
+COPY --from=builder /app/target/mint_scan-cli.jar .
 
 # Copy wrapper script if needed
-COPY mintitv-cli ./
+COPY mint_scan-cli ./
 
 # Make wrapper executable
-RUN chmod +x mintitv-cli
+RUN chmod +x mint_scan-cli
 
 # Change ownership
 RUN chown -R appuser:appgroup /app
@@ -47,5 +47,5 @@ RUN chown -R appuser:appgroup /app
 USER appuser
 
 # Default command
-ENTRYPOINT ["java", "-jar", "/app/mintitv-cli.jar"]
+ENTRYPOINT ["java", "-jar", "/app/mint_scan-cli.jar"]
 CMD ["help"]

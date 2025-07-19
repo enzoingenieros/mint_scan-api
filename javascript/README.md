@@ -1,6 +1,6 @@
-# MintITV CLI - TypeScript/Bun
+# MintScan CLI - TypeScript/Bun
 
-CLI para interactuar con la API de MintITV, implementado en TypeScript usando Bun como runtime.
+CLI para interactuar con la API de MintScan, implementado en TypeScript usando Bun como runtime.
 
 ## Características
 
@@ -41,8 +41,8 @@ bun run src/index.ts [comando] [opciones]
 ### Compilar a binario (opcional)
 
 ```bash
-bun build src/index.ts --compile --outfile mintitv-cli
-./mintitv-cli [comando] [opciones]
+bun build src/index.ts --compile --outfile mint_scan-cli
+./mint_scan-cli [comando] [opciones]
 ```
 
 ## Comandos
@@ -59,8 +59,8 @@ bun run src/index.ts login usuario@ejemplo.com contraseña
 bun run src/index.ts login usuario@ejemplo.com
 
 # Usando variables de entorno
-export MINTITV_USER="usuario@ejemplo.com"
-export MINTITV_PASS="contraseña"
+export MINTSCAN_USER="usuario@ejemplo.com"
+export MINTSCAN_PASS="contraseña"
 bun run src/index.ts login
 
 # Solo mostrar el token
@@ -141,15 +141,15 @@ bun run src/index.ts retrieve <id> --json resultado.json
 
 ## Variables de Entorno
 
-- `MINTITV_USER`: Usuario para autenticación
-- `MINTITV_PASS`: Contraseña del usuario
-- `MINTITV_TOKEN`: Token JWT (evita tener que hacer login)
+- `MINTSCAN_USER`: Usuario para autenticación
+- `MINTSCAN_PASS`: Contraseña del usuario
+- `MINTSCAN_TOKEN`: Token JWT (evita tener que hacer login)
 
 ### Ejemplo de uso con token guardado
 
 ```bash
 # Guardar token después del login
-export MINTITV_TOKEN=$(bun run src/index.ts login usuario contraseña -q)
+export MINTSCAN_TOKEN=$(bun run src/index.ts login usuario contraseña -q)
 
 # Usar el token en comandos posteriores
 bun run src/index.ts list

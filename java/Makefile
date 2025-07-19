@@ -1,4 +1,4 @@
-# Makefile for MintITV CLI
+# Makefile for MintScan CLI
 # Simplifies build, test, and run operations
 
 # Variables
@@ -6,9 +6,9 @@ MAVEN := mvn
 JAVA := java
 DOCKER := docker
 DOCKER_COMPOSE := docker-compose
-JAR_NAME := mintitv-cli.jar
+JAR_NAME := mint_scan-cli.jar
 JAR_PATH := target/$(JAR_NAME)
-DOCKER_IMAGE := mintitv-cli:latest
+DOCKER_IMAGE := mint_scan-cli:latest
 DOCKER_BUILD_IMAGE := maven:3.9.5-eclipse-temurin-11
 
 # Colors for output
@@ -33,7 +33,7 @@ HAS_DOCKER := $(shell command -v docker 2> /dev/null)
 
 # Help target
 help: ## Show this help message
-	@echo "$(BLUE)MintITV CLI - Makefile Commands$(NC)"
+	@echo "$(BLUE)MintScan CLI - Makefile Commands$(NC)"
 	@echo ""
 	@echo "$(YELLOW)Build Commands:$(NC)"
 	@grep -E '^(build|clean|install|test).*:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  $(GREEN)%-20s$(NC) %s\n", $$1, $$2}'
@@ -111,13 +111,13 @@ docker-clean: check-docker ## Clean Docker images and containers
 
 # Installation target
 install: build ## Install JAR to local system
-	@echo "$(BLUE)Installing MintITV CLI...$(NC)"
+	@echo "$(BLUE)Installing MintScan CLI...$(NC)"
 	@mkdir -p ~/bin
 	@cp $(JAR_PATH) ~/bin/
-	@echo '#!/bin/bash' > ~/bin/mintitv-cli
-	@echo 'java -jar ~/bin/$(JAR_NAME) "$$@"' >> ~/bin/mintitv-cli
-	@chmod +x ~/bin/mintitv-cli
-	@echo "$(GREEN)✓ Installed to ~/bin/mintitv-cli$(NC)"
+	@echo '#!/bin/bash' > ~/bin/mint_scan-cli
+	@echo 'java -jar ~/bin/$(JAR_NAME) "$$@"' >> ~/bin/mint_scan-cli
+	@chmod +x ~/bin/mint_scan-cli
+	@echo "$(GREEN)✓ Installed to ~/bin/mint_scan-cli$(NC)"
 	@echo "$(YELLOW)Add ~/bin to your PATH if not already added:$(NC)"
 	@echo '  export PATH=$$PATH:~/bin'
 
@@ -139,7 +139,7 @@ else
 endif
 
 # CLI command shortcuts
-login: ## Login to MintITV API (use USER and PASS variables)
+login: ## Login to MintScan API (use USER and PASS variables)
 ifndef USER
 	@echo "$(RED)Error: USER variable required$(NC)"
 	@echo "Usage: make login USER=usuario [PASS=password]"
@@ -147,12 +147,12 @@ ifndef USER
 endif
 	@$(MAKE) run ARGS="login $(USER) $(PASS)"
 
-list: ## List documents (use TOKEN variable or MINTITV_TOKEN env)
+list: ## List documents (use TOKEN variable or MINTSCAN_TOKEN env)
 ifndef TOKEN
-ifndef MINTITV_TOKEN
-	@echo "$(RED)Error: TOKEN variable or MINTITV_TOKEN env required$(NC)"
+ifndef MINTSCAN_TOKEN
+	@echo "$(RED)Error: TOKEN variable or MINTSCAN_TOKEN env required$(NC)"
 	@echo "Usage: make list TOKEN=your-token"
-	@echo "   or: export MINTITV_TOKEN=your-token"
+	@echo "   or: export MINTSCAN_TOKEN=your-token"
 	@exit 1
 endif
 endif
@@ -169,8 +169,8 @@ ifndef ID
 	@exit 1
 endif
 ifndef TOKEN
-ifndef MINTITV_TOKEN
-	@echo "$(RED)Error: TOKEN variable or MINTITV_TOKEN env required$(NC)"
+ifndef MINTSCAN_TOKEN
+	@echo "$(RED)Error: TOKEN variable or MINTSCAN_TOKEN env required$(NC)"
 	@exit 1
 endif
 endif
@@ -197,8 +197,8 @@ ifndef CATEGORY
 	@exit 1
 endif
 ifndef TOKEN
-ifndef MINTITV_TOKEN
-	@echo "$(RED)Error: TOKEN variable or MINTITV_TOKEN env required$(NC)"
+ifndef MINTSCAN_TOKEN
+	@echo "$(RED)Error: TOKEN variable or MINTSCAN_TOKEN env required$(NC)"
 	@exit 1
 endif
 endif
@@ -263,12 +263,12 @@ package: build ## Create distribution package
 	@echo "$(BLUE)Creating distribution package...$(NC)"
 	@mkdir -p dist
 	@cp $(JAR_PATH) dist/
-	@cp mintitv-cli dist/
+	@cp mint_scan-cli dist/
 	@cp README.md dist/
 	@cp CLI_README.md dist/
-	@tar -czf mintitv-cli-dist.tar.gz -C dist .
+	@tar -czf mint_scan-cli-dist.tar.gz -C dist .
 	@rm -rf dist
-	@echo "$(GREEN)✓ Package created: mintitv-cli-dist.tar.gz$(NC)"
+	@echo "$(GREEN)✓ Package created: mint_scan-cli-dist.tar.gz$(NC)"
 
 release: clean build test package ## Create release
 	@echo "$(GREEN)✓ Release ready$(NC)"

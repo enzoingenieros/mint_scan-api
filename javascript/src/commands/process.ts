@@ -29,8 +29,8 @@ export function createProcessCommand(): Command {
         // Get token
         const token = options.token || process.env[ENV_VARS.TOKEN];
         if (!token) {
-          console.error('Error: Se requiere token (--token o variable MINTITV_TOKEN)');
-          console.error("Ejecuta 'mintitv-cli login' para obtener un token");
+          console.error('Error: Se requiere token (--token o variable MINTSCAN_TOKEN)');
+          console.error("Ejecuta 'mint_scan-cli login' para obtener un token");
           process.exit(1);
         }
 
@@ -96,7 +96,7 @@ export function createProcessCommand(): Command {
           console.log('\n✓ Procesamiento iniciado exitosamente');
           console.log(`ID del proceso: ${response.id}`);
           console.log('\nPuedes verificar el estado con:');
-          console.log(`  mintitv-cli retrieve ${response.id}`);
+          console.log(`  mint_scan-cli retrieve ${response.id}`);
         } else {
           console.log('\n✗ Error en el procesamiento');
           if (options.verbose) {
