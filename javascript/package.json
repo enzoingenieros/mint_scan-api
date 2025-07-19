@@ -1,0 +1,30 @@
+{
+  "name": "mintitv-cli",
+  "version": "1.0.0",
+  "description": "CLI for MintITV API operations using Bun and TypeScript",
+  "main": "src/index.ts",
+  "type": "module",
+  "bin": {
+    "mintitv-cli": "src/index.ts"
+  },
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "dev": "bun --watch src/index.ts",
+    "build": "bun build src/index.ts --compile --outfile mintitv-cli",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit"
+  },
+  "keywords": ["mintitv", "cli", "api", "typescript", "bun"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^12.0.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
