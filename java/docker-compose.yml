@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # Build service - for building the application
+  builder:
+    image: maven:3.9.5-eclipse-temurin-11
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - maven-cache:/root/.m2
+    command: mvn clean package
+    profiles:
+      - build
+
+  # CLI service - for running the application
+  mintitv-cli:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mintitv-cli:latest
+    environment:
+      # Pass environment variables from host
+      - MINTITV_USER=${MINTITV_USER}
+      - MINTITV_PASS=${MINTITV_PASS}
+      - MINTITV_TOKEN=${MINTITV_TOKEN}
+    volumes:
+      # Mount local directory for file access (process command)
+      - ./data:/data:ro
+      # Mount for output files (JSON exports)
+      - ./output:/output
+    working_dir: /data
+    # Override entrypoint to allow interactive mode
+    entrypoint: ["java", "-jar", "/app/mintitv-cli.jar"]
+    # Default command
+    command: ["help"]
+    # For interactive password input
+    stdin_open: true
+    tty: true
+
+volumes:
+  maven-cache:
+    driver: local

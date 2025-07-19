@@ -3,7 +3,8 @@
 .env.*
 *.env
 !.env.example
-
+.claude
+CLAUDE.md
 # Archivos de configuración local
 config.local.*
 *.local
@@ -63,6 +64,8 @@ exports/
 *.json
 !package.json
 !package-lock.json
+!doc/**/*.json
+
 
 # Certificados y configuración SSL
 ssl/

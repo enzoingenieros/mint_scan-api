@@ -77,6 +77,105 @@ python3 pyscripts/retrieve_process.py --token "$token" <id-documento>
 
 Para documentación completa sobre los scripts, consulta [pyscripts/README.md](pyscripts/README.md).
 
+## Cliente Java / Java Client
+
+El proyecto incluye una implementación completa en Java de la API de MintITV, proporcionando tanto una librería reutilizable como una aplicación CLI con todas las funcionalidades.
+
+### Ubicación del Proyecto Java
+
+```text
+java/
+├── src/main/java/com/mintitv/
+│   ├── api/                    # Librería API Java
+│   │   ├── auth/              # Servicios de autenticación
+│   │   ├── process/           # Servicios de procesamiento
+│   │   ├── models/            # Modelos de datos
+│   │   ├── exceptions/        # Manejo de errores
+│   │   └── utils/             # Utilidades HTTP y Base64
+│   └── cli/                   # Aplicación CLI
+│       └── MintItvCli.java    # Punto de entrada principal
+├── pom.xml                    # Configuración Maven
+├── Dockerfile                 # Build con Docker (no requiere Java)
+├── Makefile                   # Automatización completa
+└── README.md                  # Documentación detallada
+```
+
+### Características del Cliente Java
+
+- ☕ **Java 11+** con HttpClient nativo (sin dependencias pesadas)
+- 📦 **Librería reutilizable** para integrar en otros proyectos Java
+- 🖥️ **CLI completo** con todos los comandos en un solo ejecutable
+- 🐳 **Docker ready** - Compila y ejecuta sin tener Java instalado
+- 🔧 **Maven** para gestión de dependencias
+- 🎯 **Type-safe** con modelos fuertemente tipados
+
+### Uso Rápido del CLI Java
+
+```bash
+# Opción 1: Con Java instalado
+cd java/
+mvn clean package
+java -jar target/mintitv-cli.jar help
+
+# Opción 2: Con Docker (sin Java)
+cd java/
+./docker-build.sh
+./docker-run.sh help
+
+# Opción 3: Con Make
+cd java/
+make build
+make login USER=miusuario
+make list
+```
+
+### Ejemplos de Uso
+
+```bash
+# Autenticación
+java -jar target/mintitv-cli.jar login miusuario
+# O con Docker:
+./docker-run.sh login miusuario
+
+# Listar documentos
+export MINTITV_TOKEN="tu-token"
+java -jar target/mintitv-cli.jar list --estado COMPLETED
+
+# Procesar documento
+java -jar target/mintitv-cli.jar process --tipo coc --categoria M1 documento.pdf
+
+# Recuperar resultado
+java -jar target/mintitv-cli.jar retrieve <id-documento>
+```
+
+### Uso como Librería Java
+
+La librería se puede integrar en cualquier proyecto Java:
+
+```java
+// Autenticación
+LoginService loginService = new LoginService();
+String token = loginService.login("usuario", "contraseña");
+
+// Listar documentos
+ProcessListService listService = new ProcessListService(token);
+ProcessListResponse response = listService.listDocuments(
+    ProcessStatus.COMPLETED,  // estado
+    DocumentType.COC,        // tipo
+    VehicleCategory.M1       // categoría
+);
+
+// Procesar imagen
+ProcessImagePoolService processService = new ProcessImagePoolService(token);
+ProcessPoolResponse result = processService.processImage(
+    DocumentType.COC,
+    VehicleCategory.M1,
+    "documento.pdf"
+);
+```
+
+Para documentación completa del cliente Java, consulta [java/README.md](java/README.md).
+
 ## Requisitos
 
 ### Para los scripts de cliente

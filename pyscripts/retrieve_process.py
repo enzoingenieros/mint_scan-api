@@ -16,6 +16,131 @@ import argparse
 from typing import Dict, Any, TypedDict, Optional, List, Literal
 
 
+# Diccionario de descripciones de campos de ficha técnica
+FIELD_DESCRIPTIONS = {
+    # Sección A - Datos del fabricante
+    "A.1": "Nombre del fabricante del vehículo base",
+    "A.2": "Dirección del fabricante del vehículo base",
+    
+    # Sección B - Fechas y fabricante completado
+    "B.1": "Nombre del fabricante del vehículo completado",
+    "B.2": "Dirección del fabricante del vehículo completado",
+    
+    # Sección C - Códigos
+    "C.I": "Código ITV",
+    "C.L": "Clasificación del vehículo",
+    "C.V": "Control VIN",
+    
+    # Sección D - Datos del vehículo
+    "D.1": "Marca",
+    "D.2": "Tipo / Variante / Versión",
+    "D.3": "Denominación comercial del vehículo",
+    "D.6": "Procedencia",
+    
+    # Sección E - Identificación
+    "E": "Nº de identificación del vehículo",
+    
+    # Sección EP - Estructura de protección
+    "EP": "Estructura de protección",
+    "EP.1": "Marca de la estructura de protección",
+    "EP.2": "Modelo de la estructura de protección",
+    "EP.3": "N° de homologación de la estructura de protección",
+    "EP.4": "Nº identificativo de la estructura de protección",
+    
+    # Sección F - Masas y dimensiones
+    "F.1": "Masa Máxima en carga Técnicamente Admisible (MMTA)",
+    "F.1.1": "Masa Máxima en carga Técnicamente Admisible en cada eje 1°/2°/3°",
+    "F.1.5": "Masa Máxima en carga Técnicamente Admisible en 5a rueda o pivote de acoplamiento",
+    "F.2": "Masa Máxima en carga Admisible del Vehículo en circulación (MMA)",
+    "F.2.1": "Masa Máxima autorizada en cada eje 1°/2°/3°",
+    "F.3": "Masa Máxima Técnicamente Admisible del conjunto (MMTAC)",
+    "F.3.1": "Masa Máxima Autorizada del conjunto MMC",
+    "F.4": "Altura total",
+    "F.5": "Anchura total",
+    "F.5.1": "Anchura máxima carrozable",
+    "F.6": "Longitud total",
+    "F.6.1": "Longitud máxima carrozable",
+    "F.7": "Vía anterior",
+    "F.7.1": "Vía posterior",
+    "F.8": "Voladizo posterior",
+    "F.8.1": "Voladizo máximo posterior carrozable",
+    
+    # Sección G - Masas
+    "G": "Masa en Orden de marcha (MOM)",
+    "G.1": "Masa en vacío para vehículos categoría L",
+    "G.2": "Masa Mínima Admisible del vehículo completado",
+    
+    # Sección J - Categoría y carrocería
+    "J": "Categoría del vehículo",
+    "J.1": "Carrocería del vehículo",
+    "J.2": "Clase",
+    "J.3": "Volumen de bodegas",
+    
+    # Sección K - Homologación
+    "K": "N° de homologación del vehículo base",
+    "Κ.1": "N° de homologación del vehículo completado",
+    "K.1": "N° de homologación del vehículo completado",
+    "K.2": "N° certificado TITV vehículo base",
+    
+    # Sección L - Ejes y ruedas
+    "L": "N° de ejes y ruedas",
+    "L.0": "Nº y posición de ejes con ruedas gemelas",
+    "L.1": "Ejes motrices",
+    "L.2": "Dimensiones de los neumáticos",
+    
+    # Sección M - Distancias
+    "M.1": "Distancia entre ejes 1°-2°, 2°-3°",
+    "M.4": "Distancia entre 5a rueda o pivote de acoplamiento y último eje",
+    
+    # Sección O - Remolque
+    "O.1": "Masa Remolcable con frenos / Masa Remolcable Técnicamente Admisible del vehículo de motor en caso de:",
+    "O.1.1": "Barra de tracción",
+    "O.1.2": "Semirremolque",
+    "O.1.3": "Remolque eje central",
+    "O.1.4": "Remolque sin freno",
+    "O.2.1": "Masa Máxima remolcable Técnicamente Admisible con frenos mecánicos",
+    "O.2.2": "Masa Máxima remolcable Técnicamente Admisible con frenos de inercia",
+    "O.2.3": "Masa Máxima remolcable Técnicamente Admisible con frenos hidráulicos o neumáticos",
+    "O.3": "Tipo de freno de servicio",
+    
+    # Sección P - Motor
+    "P.1": "Cilindrada",
+    "P.1.1": "Número y disposición de los cilindros",
+    "P.2": "Potencia de motor",
+    "P.2.1": "Potencia fiscal",
+    "P.3": "Tipo de combustible o fuente de energía",
+    "P.5": "Código de identificación del motor",
+    "P.5.1": "Fabricante o marca del motor",
+    
+    # Sección Q - Relación potencia/masa
+    "Q": "Relación potencia / masa",
+    
+    # Sección R - Color
+    "R": "Color",
+    
+    # Sección S - Plazas
+    "S.1": "Nº de plazas asiento / N° de asientos o sillines",
+    "S.1.1": "Nº de plazas de pie",
+    "S.1.2": "Cinturones de seguridad",
+    "S.2": "Nº de plazas de pie",
+    
+    # Sección T - Velocidad
+    "T": "Velocidad máxima",
+    
+    # Sección U - Ruido
+    "U.1": "Nivel sonoro en parada",
+    "U.2": "Velocidad del motor a la que se mide el nivel sonoro o vehículo parado",
+    
+    # Sección V - Emisiones
+    "V.7": "Emisiones de CO2",
+    "V.8": "Emisiones de CO",
+    "V.9": "Nivel de emisiones",
+    
+    # Sección Z - Año
+    "Z": "Año y número de la serie corta"
+}
+
+
 # Tipos de la API
 class License(TypedDict):
     """Información de licencia del vehículo"""
@@ -253,6 +378,14 @@ def imprimir_detalles_proceso(datos_proceso: ProcessedDocument) -> None:
     Args:
         datos_proceso: Datos del documento procesado desde la API
     """
+    def obtener_descripcion_campo(codigo: str) -> str:
+        """Obtener la descripción formateada del campo"""
+        if codigo in FIELD_DESCRIPTIONS:
+            return f"{FIELD_DESCRIPTIONS[codigo]} ({codigo})"
+        else:
+            # Si no hay descripción, mantener el formato original
+            return codigo
+    
     print(f"\n=== Detalles del Documento Procesado ===")
     print(f"ID: {datos_proceso.get('id')}")
     print(f"Estado: {datos_proceso.get('status')}")
@@ -290,134 +423,134 @@ def imprimir_detalles_proceso(datos_proceso: ProcessedDocument) -> None:
             
             # Sección A - Datos del fabricante
             print(f"\n--- Sección A: Homologación ---")
-            print(f"Nº homologación CE (A.1): {datos.get('A.1', 'N/D')}")
-            print(f"Tipo/Variante/Versión (A.2): {datos.get('A.2', 'N/D')}")
+            print(f"{obtener_descripcion_campo('A.1')}: {datos.get('A.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('A.2')}: {datos.get('A.2', 'N/D')}")
             
             # Sección B - Fechas
             print(f"\n--- Sección B: Fechas ---")
-            print(f"Primera matriculación (B.1): {datos.get('B.1', 'N/D')}")
-            print(f"Matriculación actual (B.2): {datos.get('B.2', 'N/D')}")
+            print(f"{obtener_descripcion_campo('B.1')}: {datos.get('B.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('B.2')}: {datos.get('B.2', 'N/D')}")
             
             # Sección D - Datos del vehículo
             print(f"\n--- Sección D: Vehículo ---")
-            print(f"Marca (D.1): {datos.get('D.1', 'N/D')}")
-            print(f"Tipo (D.2): {datos.get('D.2', 'N/D')}")
-            print(f"Denominación comercial (D.3): {datos.get('D.3', 'N/D')}")
-            print(f"Color (D.6): {datos.get('D.6', 'N/D')}")
+            print(f"{obtener_descripcion_campo('D.1')}: {datos.get('D.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('D.2')}: {datos.get('D.2', 'N/D')}")
+            print(f"{obtener_descripcion_campo('D.3')}: {datos.get('D.3', 'N/D')}")
+            print(f"{obtener_descripcion_campo('D.6')}: {datos.get('D.6', 'N/D')}")
             
             # Sección E - Identificación
             print(f"\n--- Sección E: Identificación ---")
-            print(f"VIN/Nº Bastidor (E): {datos.get('E', 'N/D')}")
+            print(f"{obtener_descripcion_campo('E')}: {datos.get('E', 'N/D')}")
             
             # Sección F - Masas
             print(f"\n--- Sección F: Masas (kg) ---")
-            print(f"MMA vehículo (F.1): {datos.get('F.1', 'N/D')}")
-            print(f"MMTA vehículo (F.1.1): {datos.get('F.1.1', 'N/D')}")
-            print(f"Masa con carrocería (F.1.5): {datos.get('F.1.5', 'N/D')}")
-            print(f"MMA en servicio (F.2): {datos.get('F.2', 'N/D')}")
-            print(f"MMTA en servicio (F.2.1): {datos.get('F.2.1', 'N/D')}")
-            print(f"MCMA conjunto (F.3): {datos.get('F.3', 'N/D')}")
-            print(f"MMCTA conjunto (F.3.1): {datos.get('F.3.1', 'N/D')}")
-            print(f"MMA remolque con freno (F.4): {datos.get('F.4', 'N/D')}")
-            print(f"MMA remolque sin freno (F.5): {datos.get('F.5', 'N/D')}")
-            print(f"Carga vertical acoplamiento (F.5.1): {datos.get('F.5.1', 'N/D')}")
-            print(f"Masa orden de marcha (F.6): {datos.get('F.6', 'N/D')}")
-            print(f"Masa máx. eje 1 (F.7): {datos.get('F.7', 'N/D')}")
-            print(f"Masa máx. eje 2 (F.7.1): {datos.get('F.7.1', 'N/D')}")
-            print(f"Masa máx. eje 3 (F.8): {datos.get('F.8', 'N/D')}")
+            print(f"{obtener_descripcion_campo('F.1')}: {datos.get('F.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('F.1.1')}: {datos.get('F.1.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('F.1.5')}: {datos.get('F.1.5', 'N/D')}")
+            print(f"{obtener_descripcion_campo('F.2')}: {datos.get('F.2', 'N/D')}")
+            print(f"{obtener_descripcion_campo('F.2.1')}: {datos.get('F.2.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('F.3')}: {datos.get('F.3', 'N/D')}")
+            print(f"{obtener_descripcion_campo('F.3.1')}: {datos.get('F.3.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('F.4')}: {datos.get('F.4', 'N/D')}")
+            print(f"{obtener_descripcion_campo('F.5')}: {datos.get('F.5', 'N/D')}")
+            print(f"{obtener_descripcion_campo('F.5.1')}: {datos.get('F.5.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('F.6')}: {datos.get('F.6', 'N/D')}")
+            print(f"{obtener_descripcion_campo('F.7')}: {datos.get('F.7', 'N/D')}")
+            print(f"{obtener_descripcion_campo('F.7.1')}: {datos.get('F.7.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('F.8')}: {datos.get('F.8', 'N/D')}")
             
             # Sección G - Masas
             print(f"\n--- Sección G: Masa en servicio ---")
-            print(f"Masa en servicio (G): {datos.get('G', 'N/D')}")
-            print(f"Peso máx. en carga (G.1): {datos.get('G.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('G')}: {datos.get('G', 'N/D')}")
+            print(f"{obtener_descripcion_campo('G.1')}: {datos.get('G.1', 'N/D')}")
             
             # Sección J - Categoría
             print(f"\n--- Sección J: Categoría ---")
-            print(f"Categoría (J): {datos.get('J', 'N/D')}")
-            print(f"Destino (J.1): {datos.get('J.1', 'N/D')}")
-            print(f"Carrocería (J.2): {datos.get('J.2', 'N/D')}")
-            print(f"Modalidad (J.3): {datos.get('J.3', 'N/D')}")
+            print(f"{obtener_descripcion_campo('J')}: {datos.get('J', 'N/D')}")
+            print(f"{obtener_descripcion_campo('J.1')}: {datos.get('J.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('J.2')}: {datos.get('J.2', 'N/D')}")
+            print(f"{obtener_descripcion_campo('J.3')}: {datos.get('J.3', 'N/D')}")
             
             # Sección K - Homologación
             print(f"\n--- Sección K: Homologación de tipo ---")
-            print(f"Nº homologación (K): {datos.get('K', 'N/D')}")
-            print(f"Variante (K.1): {datos.get('K.1', 'N/D')}")
-            print(f"Versión (K.2): {datos.get('K.2', 'N/D')}")
+            print(f"{obtener_descripcion_campo('K')}: {datos.get('K', 'N/D')}")
+            print(f"{obtener_descripcion_campo('K.1')}: {datos.get('K.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('K.2')}: {datos.get('K.2', 'N/D')}")
             
             # Sección L - Dimensiones
             print(f"\n--- Sección L: Dimensiones (mm) ---")
-            print(f"Número de ejes (L): {datos.get('L', 'N/D')}")
-            print(f"Distancia entre ejes (L.0): {datos.get('L.0', 'N/D')}")
-            print(f"Longitud (L.1): {datos.get('L.1', 'N/D')}")
-            print(f"Anchura (L.2): {datos.get('L.2', 'N/D')}")
+            print(f"{obtener_descripcion_campo('L')}: {datos.get('L', 'N/D')}")
+            print(f"{obtener_descripcion_campo('L.0')}: {datos.get('L.0', 'N/D')}")
+            print(f"{obtener_descripcion_campo('L.1')}: {datos.get('L.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('L.2')}: {datos.get('L.2', 'N/D')}")
             
             # Sección M - Distancias
             print(f"\n--- Sección M: Más dimensiones (mm) ---")
-            print(f"Distancia ejes 1-2 (M.1): {datos.get('M.1', 'N/D')}")
-            print(f"Altura (M.4): {datos.get('M.4', 'N/D')}")
+            print(f"{obtener_descripcion_campo('M.1')}: {datos.get('M.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('M.4')}: {datos.get('M.4', 'N/D')}")
             
             # Sección O - Remolque
             print(f"\n--- Sección O: Remolque (kg) ---")
-            print(f"Remolque con freno (O.1): {datos.get('O.1', 'N/D')}")
-            print(f"MMA remolque con freno (O.1.1): {datos.get('O.1.1', 'N/D')}")
-            print(f"MMA remolque sin freno (O.1.2): {datos.get('O.1.2', 'N/D')}")
-            print(f"MMA eje central (O.1.3): {datos.get('O.1.3', 'N/D')}")
-            print(f"MMA remolque con freno (O.1.4): {datos.get('O.1.4', 'N/D')}")
-            print(f"Masa máx. remolque eje 1 (O.2.1): {datos.get('O.2.1', 'N/D')}")
-            print(f"Masa máx. remolque eje 2 (O.2.2): {datos.get('O.2.2', 'N/D')}")
-            print(f"Masa máx. remolque eje 3 (O.2.3): {datos.get('O.2.3', 'N/D')}")
-            print(f"Carga vertical máx. (O.3): {datos.get('O.3', 'N/D')}")
+            print(f"{obtener_descripcion_campo('O.1')}: {datos.get('O.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('O.1.1')}: {datos.get('O.1.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('O.1.2')}: {datos.get('O.1.2', 'N/D')}")
+            print(f"{obtener_descripcion_campo('O.1.3')}: {datos.get('O.1.3', 'N/D')}")
+            print(f"{obtener_descripcion_campo('O.1.4')}: {datos.get('O.1.4', 'N/D')}")
+            print(f"{obtener_descripcion_campo('O.2.1')}: {datos.get('O.2.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('O.2.2')}: {datos.get('O.2.2', 'N/D')}")
+            print(f"{obtener_descripcion_campo('O.2.3')}: {datos.get('O.2.3', 'N/D')}")
+            print(f"{obtener_descripcion_campo('O.3')}: {datos.get('O.3', 'N/D')}")
             
             # Sección P - Motor
             print(f"\n--- Sección P: Motor ---")
-            print(f"Cilindrada (cm3) (P.1): {datos.get('P.1', 'N/D')}")
-            print(f"Cilindrada (L) (P.1.1): {datos.get('P.1.1', 'N/D')}")
-            print(f"Potencia máx. (kW) (P.2): {datos.get('P.2', 'N/D')}")
-            print(f"Potencia máx. (CV) (P.2.1): {datos.get('P.2.1', 'N/D')}")
-            print(f"Combustible (P.3): {datos.get('P.3', 'N/D')}")
-            print(f"Denominación motor (P.5): {datos.get('P.5', 'N/D')}")
-            print(f"Código motor (P.5.1): {datos.get('P.5.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('P.1')}: {datos.get('P.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('P.1.1')}: {datos.get('P.1.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('P.2')}: {datos.get('P.2', 'N/D')}")
+            print(f"{obtener_descripcion_campo('P.2.1')}: {datos.get('P.2.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('P.3')}: {datos.get('P.3', 'N/D')}")
+            print(f"{obtener_descripcion_campo('P.5')}: {datos.get('P.5', 'N/D')}")
+            print(f"{obtener_descripcion_campo('P.5.1')}: {datos.get('P.5.1', 'N/D')}")
             
             # Sección Q - Relación potencia/peso
             print(f"\n--- Sección Q: Relación potencia/peso ---")
-            print(f"Relación kW/kg (Q): {datos.get('Q', 'N/D')}")
+            print(f"{obtener_descripcion_campo('Q')}: {datos.get('Q', 'N/D')}")
             
             # Sección R - Color
             print(f"\n--- Sección R: Color ---")
-            print(f"Color (R): {datos.get('R', 'N/D')}")
+            print(f"{obtener_descripcion_campo('R')}: {datos.get('R', 'N/D')}")
             
             # Sección S - Plazas
             print(f"\n--- Sección S: Plazas ---")
-            print(f"Plazas sentadas (S.1): {datos.get('S.1', 'N/D')}")
-            print(f"Plazas de pie (S.1.1): {datos.get('S.1.1', 'N/D')}")
-            print(f"Plazas de pie (S.2): {datos.get('S.2', 'N/D')}")
+            print(f"{obtener_descripcion_campo('S.1')}: {datos.get('S.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('S.1.2')}: {datos.get('S.1.2', 'N/D')}")
+            print(f"{obtener_descripcion_campo('S.2')}: {datos.get('S.2', 'N/D')}")
             
             # Sección T - Velocidad
             print(f"\n--- Sección T: Velocidad ---")
-            print(f"Velocidad máx. (km/h) (T): {datos.get('T', 'N/D')}")
+            print(f"{obtener_descripcion_campo('T')}: {datos.get('T', 'N/D')}")
             
             # Sección U - Ruido
             print(f"\n--- Sección U: Ruido ---")
-            print(f"Nivel sonoro parado dB(A) (U.1): {datos.get('U.1', 'N/D')}")
-            print(f"Velocidad motor (min-1) (U.2): {datos.get('U.2', 'N/D')}")
+            print(f"{obtener_descripcion_campo('U.1')}: {datos.get('U.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('U.2')}: {datos.get('U.2', 'N/D')}")
             
             # Sección V - Emisiones
             print(f"\n--- Sección V: Emisiones ---")
-            print(f"CO2 (g/km) (V.7): {datos.get('V.7', 'N/D')}")
-            print(f"Consumo (l/100km) (V.8): {datos.get('V.8', 'N/D')}")
-            print(f"Clase medioambiental (V.9): {datos.get('V.9', 'N/D')}")
+            print(f"{obtener_descripcion_campo('V.7')}: {datos.get('V.7', 'N/D')}")
+            print(f"{obtener_descripcion_campo('V.8')}: {datos.get('V.8', 'N/D')}")
+            print(f"{obtener_descripcion_campo('V.9')}: {datos.get('V.9', 'N/D')}")
             
             # Sección Z - Observaciones
             print(f"\n--- Sección Z: Observaciones ---")
-            print(f"Observaciones (Z): {datos.get('Z', 'N/D')}")
+            print(f"{obtener_descripcion_campo('Z')}: {datos.get('Z', 'N/D')}")
             
             # Sección EP - Equipamiento especial
             print(f"\n--- Sección EP: Equipamiento especial ---")
-            print(f"Equipamiento (EP): {datos.get('EP', 'N/D')}")
-            print(f"Equipamiento 1 (EP.1): {datos.get('EP.1', 'N/D')}")
-            print(f"Equipamiento 2 (EP.2): {datos.get('EP.2', 'N/D')}")
-            print(f"Equipamiento 3 (EP.3): {datos.get('EP.3', 'N/D')}")
-            print(f"Equipamiento 4 (EP.4): {datos.get('EP.4', 'N/D')}")
+            print(f"{obtener_descripcion_campo('EP')}: {datos.get('EP', 'N/D')}")
+            print(f"{obtener_descripcion_campo('EP.1')}: {datos.get('EP.1', 'N/D')}")
+            print(f"{obtener_descripcion_campo('EP.2')}: {datos.get('EP.2', 'N/D')}")
+            print(f"{obtener_descripcion_campo('EP.3')}: {datos.get('EP.3', 'N/D')}")
+            print(f"{obtener_descripcion_campo('EP.4')}: {datos.get('EP.4', 'N/D')}")
             
             # Otros campos
             print(f"\n--- Otros datos ---")
